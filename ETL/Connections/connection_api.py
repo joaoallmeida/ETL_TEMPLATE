@@ -11,7 +11,7 @@ def getResponseData():
     try:
         for page in range(1,11):
             
-            response = requests.get(f'http://yts.torrentbay.to/api/v2/list_movies.json?page={page}')
+            response = requests.get(f'http://yts.torrentbay.to/api/v2/list_movies.json?limit=50&page={page}')
             response.raise_for_status()
         
             content = response.json()['data']['movies']

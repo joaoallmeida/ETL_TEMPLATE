@@ -12,5 +12,13 @@ def addNewColumnToDF(df):
 
     df_aux = pd.DataFrame(torrent_list)
     df_merge = df.merge(df_aux, on='id',how='inner')
+    df_merge = df_merge.drop(['torrents'],axis=1)
         
     return df_merge
+
+def pivotGenreColumn(df):
+
+    df[['genre_01','genre_02','genre_03']] = df.apply(lambda x: pd.Series(x['genres']) ,axis=1)   
+    df = df.drop(['genres'],axis=1)
+
+    return df 

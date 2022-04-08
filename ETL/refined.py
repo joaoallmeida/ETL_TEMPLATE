@@ -1,5 +1,8 @@
 
-from .Functions.UnitFunctions import addNewColumnToDF
+from .Functions.transform_functions import addNewColumnToDF
+from .Connections.db_connection import engineSqlAlchemy
+from configparser import ConfigParser
+
 import pandas as pd
 import datetime
 import pytz
@@ -7,36 +10,45 @@ import getpass
 import socket
 import logging
 
+# Function responsible for refined the raw data.
 def dataRefinement():
-    
+
+    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+    user = f'{getpass.getuser()}@{socket.gethostname()}'
+
+    config = ConfigParser()
+    config.read('ETL/Connections/credencials.ini')
+
+    HOST=config['MySql']['host']
+    USER=config['MySql']['user']
+    PASSWORD=config['MySql']['pass']
+    DB_READ='db_movies_bronze'
+    DB_WRITE='db_movies_silver'
+
     logging.info(f'Starting the data refinement process')
     
     try:
 
-        user = f'{getpass.getuser()}@{socket.gethostname()}'
-        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
-        dt_format = dt_now.strftime("%Y%m%d")
+        conn_read = engineSqlAlchemy(HOST,USER,PASSWORD,3306,DB_READ)
+        conn_write = engineSqlAlchemy(HOST,USER,PASSWORD,3306,DB_WRITE)
 
-
-        df_movies = pd.read_parquet(f'./01.Bronze/yts_movies_{dt_format}.parquet')
-        df_movies = addNewColumnToDF(df_movies)
-
+        df_movies = pd.read_sql_table('yts_movie',conn_read)
 
         drop_columns = ['title_english','title_long','slug','description_full','peers',
-                        'synopsis','mpa_rating','background_image','torrents','seeds','url_y',
+                        'synopsis','mpa_rating','background_image','seeds','url_y',
                         'background_image_original','small_cover_image','date_uploaded_unix_x',
-                        'state','date_uploaded_unix_y','medium_cover_image','genres']
+                        'state','date_uploaded_unix_y','medium_cover_image','hash']
 
         rename_columns = {
             "url_x":"url_yts",
-            "date_uploaded_y":"date_uploaded_torrent",
-            "date_uploaded_x":"date_uploaded_content",
+            "date_uploaded_y":"uploaded_torrent_at",
+            "date_uploaded_x":"uploaded_content_at",
             "large_cover_image":"banner_image"
             }
 
+        # Getting the maximum quality from each movie 
         df_aux = df_movies.groupby(['id']).agg({'size_bytes':'max'})
         df_movie = df_movies.merge(df_aux, left_on=['id','size_bytes'], right_on=['id','size_bytes'],how='inner')
-        df_movie[['genre_01','genre_02','genre_03']] = df_movie.apply(lambda x: pd.Series(x['genres']) ,axis=1)
 
         df_movie = df_movie.drop(drop_columns,axis=1).drop_duplicates().reset_index(drop=True)
         df_movie = df_movie.rename(rename_columns,axis=1)
@@ -48,15 +60,16 @@ def dataRefinement():
         df_movie['date_uploaded_torrent'] = pd.to_datetime(df_movie['date_uploaded_torrent'],errors='coerce')
         df_movie['date_uploaded_content'] = pd.to_datetime(df_movie['date_uploaded_content'],errors='coerce')
 
-        df_movie['date_loaded'] = pd.to_datetime(dt_now)
+        df_movie['loaded_at'] = pd.to_datetime(dt_now)
         df_movie['loaded_by'] = user
 
-        df_movie.to_parquet(f'./02.Silver/yts_movies_{dt_format}.parquet')
-    
+        df_movie.to_sql(name='yts_movies',con=conn_write,if_exists='replace',index=False)
+
+        return df_movie
+
     except Exception as e:
         logging.error(f'Error to refinement data: {e}')
         raise TypeError(e)
     
     finally:
         logging.info('Ending the data refinement process')
-    

@@ -1,16 +1,12 @@
-from .Connections.ConnectToAPI import getResponseData
-from .Connections.DbConnection import engineSqlAlchemy
-from .Functions.UnitFunctions import addNewColumnToDF
+from .Connections.connection_api import getResponseData
+from .Connections.db_connection import engineSqlAlchemy
+from .Functions.transform_functions import pivotGenreColumn , addNewColumnToDF
 from configparser import ConfigParser
 
 import logging
-import datetime
-import pytz
 
 # ## Inicial Config
 log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-dt_now = datetime.datetime.now(pytz.timezone('UTC'))
-dt_format = dt_now.strftime("%Y%m%d")
 
 config = ConfigParser()
 config.read('ETL/Connections/credencials.ini')
@@ -20,18 +16,18 @@ USER=config['MySql']['user']
 PASSWORD=config['MySql']['pass']
 DB='db_movies_bronze'
 
-# # Extract Data
+# * Function responsible for extacting data from the api
 def extractData():
 
     logging.info('Extracting data from API')
     
     try:
-
+        # Creating SqlAlchemy engine for connect to database and doing a minimal transformation on the raw data to insert into table. 
         conn = engineSqlAlchemy(HOST,USER,PASSWORD,3306,DB)
-
         df, lines = getResponseData()
-        # df = addNewColumnToDF(df)
-        # df.to_parquet(f'./01.Bronze/yts_movies_{dt_now.strftime("%Y%m%d")}.parquet')
+        df = pivotGenreColumn(df)
+        df = addNewColumnToDF(df)
+        
         df.to_sql(name='yts_movie',con=conn,if_exists='replace',index=False)
         
     except Exception as e:
