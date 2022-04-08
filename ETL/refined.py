@@ -57,8 +57,8 @@ def dataRefinement():
         df_movie['language'] = df_movie['language'].str.upper()
         df_movie['type'] = df_movie['type'].str.upper()
 
-        df_movie['date_uploaded_torrent'] = pd.to_datetime(df_movie['date_uploaded_torrent'],errors='coerce')
-        df_movie['date_uploaded_content'] = pd.to_datetime(df_movie['date_uploaded_content'],errors='coerce')
+        df_movie['uploaded_torrent_at'] = pd.to_datetime(df_movie['uploaded_torrent_at'],errors='coerce')
+        df_movie['uploaded_content_at'] = pd.to_datetime(df_movie['uploaded_content_at'],errors='coerce')
 
         df_movie['loaded_at'] = pd.to_datetime(dt_now)
         df_movie['loaded_by'] = user
