@@ -18,7 +18,9 @@ def addNewColumnToDF(df):
 
 def pivotGenreColumn(df):
 
-    df[['genre_01','genre_02','genre_03','genre_04']] = df.apply(lambda x: pd.Series(x['genres']) ,axis=1)   
-    df = df.drop(['genres'],axis=1)
+    d = df['genres'].fillna('N').tolist()
+    df_aux = pd.DataFrame(data=d,index=df['id'],).add_prefix('genre_').reset_index()
+    df_merge = df.merge(df_aux, left_on='id', right_on='id')
+    df_merge = df_merge.drop(['genres'],axis=1)
 
-    return df 
+    return df_merge

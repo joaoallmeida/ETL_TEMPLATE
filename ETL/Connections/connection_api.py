@@ -1,11 +1,9 @@
 import requests
 import pandas as pd
-import datetime
-import pytz
+
 
 def getResponseData():
     
-    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     movies_list = list()
     
     try:
@@ -19,11 +17,8 @@ def getResponseData():
         
         data = [d for m in movies_list for d in m]
         df = pd.DataFrame(data)
-        df['extract_at'] = pd.to_datetime(dt_now)
-                
-        lines = len(df.index)
 
-        return df, lines
+        return df
 
     except requests.exceptions.RequestException as e:
         raise TypeError(e)

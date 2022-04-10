@@ -32,7 +32,7 @@ def dataRefinement():
         conn_read = engineSqlAlchemy(HOST,USER,PASSWORD,3306,DB_READ)
         conn_write = engineSqlAlchemy(HOST,USER,PASSWORD,3306,DB_WRITE)
 
-        df_movies = pd.read_sql_table('yts_movie',conn_read)
+        df_movies = pd.read_sql_table('yts_movies',conn_read)
 
         drop_columns = ['title_english','title_long','slug','description_full','peers',
                         'synopsis','mpa_rating','background_image','seeds','url_y',
@@ -50,7 +50,8 @@ def dataRefinement():
         df_aux = df_movies.groupby(['id']).agg({'size_bytes':'max'})
         df_movie = df_movies.merge(df_aux, left_on=['id','size_bytes'], right_on=['id','size_bytes'],how='inner')
 
-        df_movie = df_movie.drop(drop_columns,axis=1).drop_duplicates().reset_index(drop=True)
+        df_movie = df_movie.drop(drop_columns,axis=1)
+        df_movie = df_movie.drop_duplicates().reset_index(drop=True)
         df_movie = df_movie.rename(rename_columns,axis=1)
 
         df_movie['title'] = df_movie['title'].str.upper()

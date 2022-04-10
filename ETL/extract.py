@@ -4,6 +4,9 @@ from .Functions.transform_functions import pivotGenreColumn , addNewColumnToDF
 from configparser import ConfigParser
 
 import logging
+import pandas as pd
+import datetime
+import pytz
 
 # ## Inicial Config
 log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -21,14 +24,20 @@ def extractData():
 
     logging.info('Extracting data from API')
     
+    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+    
     try:
         # Creating SqlAlchemy engine for connect to database and doing a minimal transformation on the raw data to insert into table. 
         conn = engineSqlAlchemy(HOST,USER,PASSWORD,3306,DB)
-        df, lines = getResponseData()
+        df = getResponseData()
         df = pivotGenreColumn(df)
         df = addNewColumnToDF(df)
         
-        df.to_sql(name='yts_movie',con=conn,if_exists='replace',index=False)
+        df['extracting_at'] = pd.to_datetime(dt_now)
+
+        df.to_sql(name='yts_movies',con=conn,if_exists='replace',index=False)
+        
+        lines = len(df.index)
         
     except Exception as e:
         logging.error(f'Error in extract process: {e}',exc_info=False)
