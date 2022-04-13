@@ -13,6 +13,7 @@ def addNewColumnToDF(df):
     df_aux = pd.DataFrame(torrent_list)
     df_merge = df.merge(df_aux, on='id',how='inner')
     df_merge = df_merge.drop(['torrents'],axis=1)
+    df_merge = df_merge.drop_duplicates()
         
     return df_merge
 

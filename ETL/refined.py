@@ -11,7 +11,7 @@ import socket
 import logging
 
 # Function responsible for refined the raw data.
-def dataRefinement():
+def DataRefinement():
 
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     user = f'{getpass.getuser()}@{socket.gethostname()}'

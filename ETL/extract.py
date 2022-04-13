@@ -20,7 +20,7 @@ PASSWORD=config['MySql']['pass']
 DB='db_movies_bronze'
 
 # * Function responsible for extacting data from the api
-def extractData():
+def ExtractData():
 
     logging.info('Extracting data from API')
     
