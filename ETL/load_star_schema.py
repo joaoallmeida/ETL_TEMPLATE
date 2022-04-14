@@ -76,7 +76,7 @@ def LoadStartSchema():
     df_genres = df.copy()
     df_genres = df.loc[:,df.columns.str.startswith('genre')]
     df_genres = pd.melt(df_genres,value_name='Genres').drop(['variable'],axis=1)
-    df_genres = df_genres.drop_duplicates()
+    df_genres = df_genres.drop_duplicates().reset_index(drop=True)
     df_genres['CreatedAt'] = pd.to_datetime(dt_now)
     df_genres['UpdatedAt'] = pd.to_datetime(dt_now)
     df_genres['LoadedAt'] = pd.to_datetime(dt_now)
