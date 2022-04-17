@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS db_movies_bronze;
+CREATE DATABASE IF NOT EXISTS db_movies_silver;
+CREATE DATABASE IF NOT EXISTS db_movies_gold;

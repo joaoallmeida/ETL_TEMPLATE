@@ -1,11 +1,12 @@
-from mysql.connector import connect
 import sqlalchemy
 import logging
+import pymysql
 
-def mysqlconnection(host,user,password,db=''):
-    db_conn = connect(
+def mysqlconnection(host,user,password,port,db=''):
+    db_conn = pymysql.connect(
         host=host,
         user=user,
+        port=port,
         password=password,
         database=db
     )
