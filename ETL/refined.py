@@ -35,14 +35,14 @@ def DataRefinement():
         df_movies = pd.read_sql_table('yts_movies',conn_read)
 
         drop_columns = ['title_english','title_long','slug','description_full','peers',
-                        'synopsis','mpa_rating','background_image','seeds','url_y',
-                        'background_image_original','small_cover_image','date_uploaded_unix_x',
-                        'state','date_uploaded_unix_y','medium_cover_image','hash']
+                        'synopsis','mpa_rating','background_image','seeds','url_tt',
+                        'background_image_original','small_cover_image','date_uploaded_unix_tt',
+                        'state','date_uploaded_unix','medium_cover_image','hash']
 
         rename_columns = {
-            "url_x":"url_yts",
-            "date_uploaded_y":"uploaded_torrent_at",
-            "date_uploaded_x":"uploaded_content_at",
+            "url":"url_yts",
+            "date_uploaded_tt":"uploaded_torrent_at",
+            "date_uploaded":"uploaded_content_at",
             "large_cover_image":"banner_image"
             }
 

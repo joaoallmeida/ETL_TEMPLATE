@@ -1,9 +1,8 @@
 import pandas as pd
 
 def addNewColumnToDF(df):
-    
     torrent_list = list()
-    
+
     for a,b in df.iterrows():
         for t in b.torrents:
             t['id'] = b.id
@@ -11,9 +10,10 @@ def addNewColumnToDF(df):
             torrent_list.append(t)
 
     df_aux = pd.DataFrame(torrent_list)
-    df_merge = df.merge(df_aux, on='id',how='inner')
+    df_merge = df.merge(df_aux, on='id',how='inner',suffixes=(None, '_tt'))
     df_merge = df_merge.drop(['torrents'],axis=1)
     df_merge = df_merge.drop_duplicates()
+    df_merge
         
     return df_merge
 
