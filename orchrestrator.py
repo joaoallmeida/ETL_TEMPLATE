@@ -2,7 +2,6 @@ from ETL import create_database
 from ETL import extract
 from ETL import refined
 from ETL import load_star_schema
-
 import logging
 
 def main():

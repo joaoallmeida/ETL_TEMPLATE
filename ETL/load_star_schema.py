@@ -9,8 +9,7 @@ import socket
 import logging
 
 # ## Inicial Config
-log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
+log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
 def LoadStartSchema():
 
@@ -29,94 +28,104 @@ def LoadStartSchema():
     DB_READ='db_movies_silver'
     DB_WRITE='db_movies_gold'
 
-    dbcon_read = db_connection.engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
-    dbcon_write = db_connection.engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
+    try:
+        dbcon_read = db_connection.engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
+        dbcon_write = db_connection.engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
 
-    df = pd.read_sql_table('yts_movies',dbcon_read)
+        df = pd.read_sql_table('yts_movies',dbcon_read)
 
-    ## ----- ## -----## ----- ## -----## ----- ## -----
-    # ## Dim Torrent
+        ## ----- ## -----## ----- ## -----## ----- ## -----
+        # ## Dim Torrent
+        logging.info('Creating Dim Torrent')
 
-    logging.info('Creating dim torrent')
+        dict_columns_torrent = {
+            "url_torrent":"TorrentURL",
+            "size":"Size",
+            "size_bytes":"Bytes",
+            "type":"Type",
+            "quality":"Quality",
+            "language":"Language",
+            "uploaded_torrent_at":"TorrentUploadedAt",
+        }
 
-    dict_columns_torrent = {
-        "url_torrent":"TorrentURL",
-        "size":"Size",
-        "size_bytes":"Bytes",
-        "type":"Type",
-        "quality":"Quality",
-        "language":"Language",
-        "uploaded_torrent_at":"TorrentUploadedAt",
-    }
+        drop_cols_torrent = ['TorrentURL', 'Size', 'Bytes', 'Type', 'Quality'
+                            ,'Language', 'TorrentUploadedAt', 'CreatedAt', 'UpdatedAt', 'LoadedAt'
+                            ,'LoadedBy','url_torrent','size','size_bytes','type'
+                            ,'quality','language','uploaded_torrent_at']
 
-    drop_cols_torrent = ['TorrentURL', 'Size', 'Bytes', 'Type', 'Quality'
-                        ,'Language', 'TorrentUploadedAt', 'CreatedAt', 'UpdatedAt', 'LoadedAt'
-                        ,'LoadedBy','url_torrent','size','size_bytes','type'
-                        ,'quality','language','uploaded_torrent_at']
+        df_torrent = df.copy()
+        df_torrent = df[dict_columns_torrent.keys()]
+        df_torrent = df_torrent.rename(dict_columns_torrent,axis=1)
+        df_torrent['CreatedAt'] = pd.to_datetime(dt_now)
+        df_torrent['UpdatedAt'] = pd.to_datetime(dt_now)
+        df_torrent['LoadedAt'] = pd.to_datetime(dt_now)
+        df_torrent['LoadedBy'] = user
+        df_torrent.insert(0, 'TorrentId' , (df_torrent.index+1) )
 
-    df_torrent = df.copy()
-    df_torrent = df[dict_columns_torrent.keys()]
-    df_torrent = df_torrent.rename(dict_columns_torrent,axis=1)
-    df_torrent['CreatedAt'] = pd.to_datetime(dt_now)
-    df_torrent['UpdatedAt'] = pd.to_datetime(dt_now)
-    df_torrent['LoadedAt'] = pd.to_datetime(dt_now)
-    df_torrent['LoadedBy'] = user
-    df_torrent.insert(0, 'TorrentId' , df_torrent.index )
+        df_torrent.to_sql('DimTorrent',dbcon_write,if_exists='replace',index=False)
+        
+        logging.info(f'Insert lines in Dim Torrent { len(df_torrent.index) }')
+        logging.info('Completed creation Dim Torrent')
+        ## ----- ## -----## ----- ## -----## ----- ## -----
+        # ## Dim Genres
 
-    df_torrent.to_sql('DimTorrent',dbcon_write,if_exists='replace',index=False)
+        logging.info('Creating Dim Genres')
 
-    logging.info('Completed creation dim torrent')
-    ## ----- ## -----## ----- ## -----## ----- ## -----
-    # ## Dim Genres
+        drop_columns_genres = ['Genres','CreatedAt','UpdatedAt','LoadedAt','LoadedBy','genre_0', 'genre_1', 'genre_2', 'genre_3',"extracting_at","loaded_at","loaded_by"]
 
-    logging.info('Creating Dim Genres')
+        df_genres = df.copy()
+        df_genres = df.loc[:,df.columns.str.startswith('genre')]
+        df_genres = pd.melt(df_genres,value_name='Genres').drop(['variable'],axis=1)
+        df_genres = df_genres.drop_duplicates().reset_index(drop=True)
+        df_genres['CreatedAt'] = pd.to_datetime(dt_now)
+        df_genres['UpdatedAt'] = pd.to_datetime(dt_now)
+        df_genres['LoadedAt'] = pd.to_datetime(dt_now)
+        df_genres['LoadedBy'] = user
+        df_genres.insert(0, 'GenreId' , (df_genres.index+1))
 
-    drop_columns_genres = ['Genres','CreatedAt','UpdatedAt','LoadedAt','LoadedBy','genre_0', 'genre_1', 'genre_2', 'genre_3',"extracting_at","loaded_at","loaded_by"]
+        df_genres.to_sql('DimGenres',dbcon_write,if_exists='replace',index=False)
+        
+        logging.info(f'Insert lines in Dim Genres { len(df_genres.index) }')
+        logging.info('Completed creation Dim Genres')
+        
+        ## ----- ## -----## ----- ## -----## ----- ## -----
+        # ## Fat Movies
 
-    df_genres = df.copy()
-    df_genres = df.loc[:,df.columns.str.startswith('genre')]
-    df_genres = pd.melt(df_genres,value_name='Genres').drop(['variable'],axis=1)
-    df_genres = df_genres.drop_duplicates().reset_index(drop=True)
-    df_genres['CreatedAt'] = pd.to_datetime(dt_now)
-    df_genres['UpdatedAt'] = pd.to_datetime(dt_now)
-    df_genres['LoadedAt'] = pd.to_datetime(dt_now)
-    df_genres['LoadedBy'] = user
-    df_genres.insert(0, 'GenreId' , df_genres.index)
+        logging.info('Creating Fat Movies')
 
-    df_genres.to_sql('DimGenres',dbcon_write,if_exists='replace',index=False)
+        dict_colums_fat = {
+            'id':'MovieId',
+            'url_yts':'YtsURL',
+            'imdb_code':'IMDB',
+            'title':'Title',
+            'year':'Year',
+            'rating':'Rating',
+            'runtime':'Runtime',
+            'summary':'Summary',
+            'yt_trailer_code':'TrailerCode',
+            'banner_image':'Banner',
+            'uploaded_content_at':'UploadedContentAt',
+            'TorrentId':'TorrentId',
+            'GenreId':'GenreId'
+        }
 
-    logging.info('Completed creation dim genres')
-    ## ----- ## -----## ----- ## -----## ----- ## -----
-    # ## Fat Movies
+        df_fat = pd.merge(df ,df_torrent ,how='inner', left_on=list(dict_columns_torrent.keys()), right_on=list(dict_columns_torrent.values())).drop(drop_cols_torrent ,axis=1)
+        df_fat = pd.merge(df_fat,df_genres, how='inner', left_on='genre_0', right_on='Genres').drop(drop_columns_genres,axis=1)
+        df_fat = df_fat.rename(dict_colums_fat,axis=1)
+        df_fat['CreatedAt'] = pd.to_datetime(dt_now)
+        df_fat['UpdatedAt'] = pd.to_datetime(dt_now)
+        df_fat['LoadedAt'] = pd.to_datetime(dt_now)
+        df_fat['LoadedBy'] = user
 
-    logging.info('Creating Fat Movies')
+        df_fat.to_sql('FatMovies',dbcon_write,if_exists='replace',index=False)
 
-    dict_colums_fat = {
-        'id':'MovieId',
-        'url_yts':'YtsURL',
-        'imdb_code':'IMDB',
-        'title':'Title',
-        'year':'Year',
-        'rating':'Rating',
-        'runtime':'Runtime',
-        'summary':'Summary',
-        'yt_trailer_code':'TrailerCode',
-        'banner_image':'Banner',
-        'uploaded_content_at':'UploadedContentAt',
-        'TorrentId':'TorrentId',
-        'GenreId':'GenreId'
-    }
-
-    df_fat = pd.merge(df ,df_torrent ,how='inner', left_on=list(dict_columns_torrent.keys()), right_on=list(dict_columns_torrent.values())).drop(drop_cols_torrent ,axis=1)
-    df_fat = pd.merge(df_fat,df_genres, how='inner', left_on='genre_0', right_on='Genres').drop(drop_columns_genres,axis=1)
-    df_fat = df_fat.rename(dict_colums_fat,axis=1)
-    df_fat['CreatedAt'] = pd.to_datetime(dt_now)
-    df_fat['UpdatedAt'] = pd.to_datetime(dt_now)
-    df_fat['LoadedAt'] = pd.to_datetime(dt_now)
-    df_fat['LoadedBy'] = user
-
-    df_fat.to_sql('FatMovies',dbcon_write,if_exists='replace',index=False)
-
-    logging.info('Completed creation fat movies')
-
-    logging.info('Completed process load start schema')
+        logging.info(f'Insert lines in Fat Movies { len(df_fat.index) }')
+        logging.info('Completed creation Fat Movies')
+        
+    except Exception as e:
+        logging.error(f'Error to load start schema: {e}')
+        raise TypeError(e)
+    
+    finally:
+        logging.info('Completed process load start schema')
+        

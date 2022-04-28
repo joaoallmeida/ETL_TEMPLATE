@@ -1,6 +1,5 @@
-
-from .Functions.transform_functions import addNewColumnToDF
-from .Connections.db_connection import engineSqlAlchemy
+from .Connections.db_connection import engineSqlAlchemy, mysqlconnection
+from .Functions.utils_functions import *
 from configparser import ConfigParser
 
 import pandas as pd
@@ -9,6 +8,9 @@ import pytz
 import getpass
 import socket
 import logging
+
+# ## Inicial Config
+log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
 # Function responsible for refined the raw data.
 def DataRefinement():
@@ -22,6 +24,7 @@ def DataRefinement():
     HOST=config['MySql']['host']
     USER=config['MySql']['user']
     PASSWORD=config['MySql']['pass']
+    PORT = 3306
     DB_READ='db_movies_bronze'
     DB_WRITE='db_movies_silver'
 
@@ -29,10 +32,11 @@ def DataRefinement():
     
     try:
 
-        conn_read = engineSqlAlchemy(HOST,USER,PASSWORD,3306,DB_READ)
-        conn_write = engineSqlAlchemy(HOST,USER,PASSWORD,3306,DB_WRITE)
+        conn_read = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
+        conn_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
+        # conn_write = mysqlconnection(HOST,USER,PASSWORD,PORT,DB_WRITE)
 
-        df_movies = pd.read_sql_table('yts_movies',conn_read)
+        df_movie = pd.read_sql_table('yts_movies',conn_read)
 
         drop_columns = ['title_english','title_long','slug','description_full','peers',
                         'synopsis','mpa_rating','background_image','seeds','url_tt',
@@ -47,8 +51,8 @@ def DataRefinement():
             }
 
         # Getting the maximum quality from each movie 
-        df_aux = df_movies.groupby(['id']).agg({'size_bytes':'max'})
-        df_movie = df_movies.merge(df_aux, left_on=['id','size_bytes'], right_on=['id','size_bytes'],how='inner')
+        # df_aux = df_movies.groupby(['id']).agg({'size_bytes':'max'})
+        # df_movie = df_movies.merge(df_aux, left_on=['id','size_bytes'], right_on=['id','size_bytes'],how='inner')
 
         df_movie = df_movie.drop(drop_columns,axis=1)
         df_movie = df_movie.drop_duplicates().reset_index(drop=True)
@@ -57,6 +61,10 @@ def DataRefinement():
         df_movie['title'] = df_movie['title'].str.upper()
         df_movie['language'] = df_movie['language'].str.upper()
         df_movie['type'] = df_movie['type'].str.upper()
+        df_movie['genre_0'] = df_movie['genre_0'].str.upper()
+        df_movie['genre_1'] = df_movie['genre_1'].str.upper()
+        df_movie['genre_2'] = df_movie['genre_2'].str.upper()
+        df_movie['genre_3'] = df_movie['genre_3'].str.upper()
 
         df_movie['uploaded_torrent_at'] = pd.to_datetime(df_movie['uploaded_torrent_at'],errors='coerce')
         df_movie['uploaded_content_at'] = pd.to_datetime(df_movie['uploaded_content_at'],errors='coerce')
@@ -66,11 +74,15 @@ def DataRefinement():
 
         df_movie.to_sql(name='yts_movies',con=conn_write,if_exists='replace',index=False)
 
-        return df_movie
+        lines_number = len(df_movie.index)
 
     except Exception as e:
+        conn_write.close()
         logging.error(f'Error to refinement data: {e}')
         raise TypeError(e)
     
     finally:
         logging.info('Ending the data refinement process')
+    
+    logging.info(f'Refined lines {lines_number}')
+    # return df_movie
