@@ -21,12 +21,18 @@ def createDB():
         dbconn = db_connection.mysqlconnection(HOST,USER,PASSWORD,PORT)
         cursor = dbconn.cursor()
 
-        with open(os.path.join('ETL','SQL','create_database.sql'),'r') as script:
-            sqlCommand = script.read().split('\n')
+        for file in os.listdir(os.path.join('ETL','SQL')):
             
-        for command in sqlCommand:
-            cursor.execute(command)
+            logging.info(f'Reading file {file}')
 
+            with open(os.path.join('ETL','SQL',file),'r') as script:
+                
+                for command in script.read().split(';'):
+                    if len(command) > 0:
+                        cursor.execute(command)
+                    
+            dbconn.commit()
+            
         cursor.close()
         dbconn.close()
 

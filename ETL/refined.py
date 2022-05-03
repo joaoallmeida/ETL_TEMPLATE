@@ -34,14 +34,14 @@ def DataRefinement():
 
         conn_read = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
         conn_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
-        # conn_write = mysqlconnection(HOST,USER,PASSWORD,PORT,DB_WRITE)
+        dbconn = mysqlconnection(HOST,USER,PASSWORD,PORT,DB_WRITE)
 
         df_movie = pd.read_sql_table('yts_movies',conn_read)
 
         drop_columns = ['title_english','title_long','slug','description_full','peers',
                         'synopsis','mpa_rating','background_image','seeds','url_tt',
                         'background_image_original','small_cover_image','date_uploaded_unix_tt',
-                        'state','date_uploaded_unix','medium_cover_image','hash']
+                        'state','date_uploaded_unix','medium_cover_image','hash','movie_sk']
 
         rename_columns = {
             "url":"url_yts",
@@ -49,10 +49,6 @@ def DataRefinement():
             "date_uploaded":"uploaded_content_at",
             "large_cover_image":"banner_image"
             }
-
-        # Getting the maximum quality from each movie 
-        # df_aux = df_movies.groupby(['id']).agg({'size_bytes':'max'})
-        # df_movie = df_movies.merge(df_aux, left_on=['id','size_bytes'], right_on=['id','size_bytes'],how='inner')
 
         df_movie = df_movie.drop(drop_columns,axis=1)
         df_movie = df_movie.drop_duplicates().reset_index(drop=True)
@@ -72,7 +68,8 @@ def DataRefinement():
         df_movie['loaded_at'] = pd.to_datetime(dt_now)
         df_movie['loaded_by'] = user
 
-        df_movie.to_sql(name='yts_movies',con=conn_write,if_exists='replace',index=False)
+        truncateTable('yts_movies',dbconn)
+        df_movie.to_sql(name='yts_movies',con=conn_write,if_exists='append',index=False)
 
         lines_number = len(df_movie.index)
 
