@@ -71,12 +71,20 @@ def LoadStartSchema():
 
         logging.info('Creating Dim Genres')
 
-        drop_columns_genres = ['Genres','CreatedAt','UpdatedAt','LoadedAt','LoadedBy','genre_0', 'genre_1', 'genre_2', 'genre_3',"extracting_at","loaded_at","loaded_by"]
+        drop_columns_genres = ['CreatedAt','UpdatedAt','LoadedAt','LoadedBy','Genre0', 'Genre1', 'Genre2', 'Genre3',"extracting_at","loaded_at","loaded_by"]
 
+        dict_rename = {
+                        "id":"MovieId",
+                        "genre_0":"Genre0",
+                        "genre_1":"Genre1",
+                        "genre_2":"Genre2",
+                        "genre_3":"Genre3",
+                      }
+        
         df_genres = df.copy()
-        df_genres = df.loc[:,df.columns.str.startswith('genre')]
-        df_genres = pd.melt(df_genres,value_name='Genres').drop(['variable'],axis=1)
+        df_genres = df.loc[:,df.columns.str.startswith(('id','genre'))]
         df_genres = df_genres.drop_duplicates().reset_index(drop=True)
+        df_genres = df_genres.rename(dict_rename,axis=1)
         df_genres['CreatedAt'] = pd.to_datetime(dt_now)
         df_genres['UpdatedAt'] = pd.to_datetime(dt_now)
         df_genres['LoadedAt'] = pd.to_datetime(dt_now)
@@ -110,7 +118,7 @@ def LoadStartSchema():
         }
 
         df_fat = pd.merge(df ,df_torrent ,how='inner', left_on=list(dict_columns_torrent.keys()), right_on=list(dict_columns_torrent.values())).drop(drop_cols_torrent ,axis=1)
-        df_fat = pd.merge(df_fat,df_genres, how='inner', left_on='genre_0', right_on='Genres').drop(drop_columns_genres,axis=1)
+        df_fat = pd.merge(df_fat,df_genres, how='inner', left_on='id', right_on='MovieId').drop(drop_columns_genres,axis=1)
         df_fat = df_fat.rename(dict_colums_fat,axis=1)
         df_fat['CreatedAt'] = pd.to_datetime(dt_now)
         df_fat['UpdatedAt'] = pd.to_datetime(dt_now)
