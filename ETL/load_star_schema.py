@@ -48,11 +48,6 @@ def LoadStartSchema():
             "uploaded_torrent_at":"TorrentUploadedAt",
         }
 
-        drop_cols_torrent = ['TorrentURL', 'Size', 'Bytes', 'Type', 'Quality'
-                            ,'Language', 'TorrentUploadedAt', 'CreatedAt', 'UpdatedAt', 'LoadedAt'
-                            ,'LoadedBy','url_torrent','size','size_bytes','type'
-                            ,'quality','language','uploaded_torrent_at']
-
         df_torrent = df.copy()
         df_torrent = df[dict_columns_torrent.keys()]
         df_torrent = df_torrent.rename(dict_columns_torrent,axis=1)
@@ -70,8 +65,6 @@ def LoadStartSchema():
         # ## Dim Genres
 
         logging.info('Creating Dim Genres')
-
-        drop_columns_genres = ['CreatedAt','UpdatedAt','LoadedAt','LoadedBy','Genre0', 'Genre1', 'Genre2', 'Genre3','Genre4',"extracting_at","loaded_at","loaded_by"]
 
         dict_rename = {
                         "id":"MovieId",
@@ -102,6 +95,14 @@ def LoadStartSchema():
 
         logging.info('Creating Fat Movies')
 
+        drop_columns = ['TorrentURL', 'Size', 'Bytes', 'Type', 'Quality'
+                        ,'Language', 'TorrentUploadedAt', 'CreatedAt_x', 'UpdatedAt_x', 'LoadedAt_x'
+                        ,'LoadedBy_x','url_torrent','size','size_bytes','type'
+                        ,'quality','language','uploaded_torrent_at'
+                        ,'Genre0', 'Genre1', 'Genre2', 'Genre3'
+                        ,'Genre4',"extracting_at","loaded_at","loaded_by","genre_0"
+                        ,"genre_1","genre_2","genre_3","genre_4" , 'CreatedAt_y', 'UpdatedAt_y' ,'LoadedAt_y' ,'LoadedBy_y']
+
         dict_colums_fat = {
             'id':'MovieId',
             'url_yts':'YtsURL',
@@ -116,8 +117,9 @@ def LoadStartSchema():
             'uploaded_content_at':'UploadedContentAt'
         }
 
-        df_fat = pd.merge(df ,df_torrent ,how='inner', left_on=list(dict_columns_torrent.keys()), right_on=list(dict_columns_torrent.values())).drop(drop_cols_torrent ,axis=1)
-        df_fat = pd.merge(df_fat,df_genres, how='inner', left_on='id', right_on='MovieId').drop(drop_columns_genres,axis=1)
+        df_fat = pd.merge(df ,df_torrent ,how='inner', left_on=list(dict_columns_torrent.keys()), right_on=list(dict_columns_torrent.values()))
+        df_fat = pd.merge(df_fat,df_genres, how='inner', left_on='id', right_on='MovieId')
+        df_fat = df_fat.drop(drop_columns,axis=1)
         df_fat = df_fat.rename(dict_colums_fat,axis=1)
         df_fat['CreatedAt'] = pd.to_datetime(dt_now)
         df_fat['UpdatedAt'] = pd.to_datetime(dt_now)
