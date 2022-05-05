@@ -39,7 +39,8 @@ def ExtractData():
         df = getResponseData()
         df = addNewColumnToDF(df)
         df = pivotGenreColumn(df)
-        
+        df = df.drop_duplicates()
+
         df['extracting_at'] = pd.to_datetime(dt_now)
         df['extracting_by'] = user
         

@@ -32,7 +32,7 @@ def LoadStartSchema():
         dbcon_read = db_connection.engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
         dbcon_write = db_connection.engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
 
-        df = pd.read_sql_table('yts_movies',dbcon_read)
+        df = pd.read_sql_table('yts_movies',dbcon_read).drop('movie_sk',axis=1)
 
         ## ----- ## -----## ----- ## -----## ----- ## -----
         # ## Dim Torrent
@@ -71,7 +71,7 @@ def LoadStartSchema():
 
         logging.info('Creating Dim Genres')
 
-        drop_columns_genres = ['CreatedAt','UpdatedAt','LoadedAt','LoadedBy','Genre0', 'Genre1', 'Genre2', 'Genre3',"extracting_at","loaded_at","loaded_by"]
+        drop_columns_genres = ['CreatedAt','UpdatedAt','LoadedAt','LoadedBy','Genre0', 'Genre1', 'Genre2', 'Genre3','Genre4',"extracting_at","loaded_at","loaded_by"]
 
         dict_rename = {
                         "id":"MovieId",
@@ -79,6 +79,7 @@ def LoadStartSchema():
                         "genre_1":"Genre1",
                         "genre_2":"Genre2",
                         "genre_3":"Genre3",
+                        "genre_4":"Genre4"
                       }
         
         df_genres = df.copy()
@@ -112,9 +113,7 @@ def LoadStartSchema():
             'summary':'Summary',
             'yt_trailer_code':'TrailerCode',
             'banner_image':'Banner',
-            'uploaded_content_at':'UploadedContentAt',
-            'TorrentId':'TorrentId',
-            'GenreId':'GenreId'
+            'uploaded_content_at':'UploadedContentAt'
         }
 
         df_fat = pd.merge(df ,df_torrent ,how='inner', left_on=list(dict_columns_torrent.keys()), right_on=list(dict_columns_torrent.values())).drop(drop_cols_torrent ,axis=1)

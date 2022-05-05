@@ -61,6 +61,7 @@ def DataRefinement():
         df_movie['genre_1'] = df_movie['genre_1'].str.upper()
         df_movie['genre_2'] = df_movie['genre_2'].str.upper()
         df_movie['genre_3'] = df_movie['genre_3'].str.upper()
+        df_movie['genre_4'] = df_movie['genre_3'].str.upper()
 
         df_movie['uploaded_torrent_at'] = pd.to_datetime(df_movie['uploaded_torrent_at'],errors='coerce')
         df_movie['uploaded_content_at'] = pd.to_datetime(df_movie['uploaded_content_at'],errors='coerce')
