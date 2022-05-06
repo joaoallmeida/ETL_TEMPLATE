@@ -36,7 +36,8 @@ def DataRefinement():
         conn_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
         dbconn = mysqlconnection(HOST,USER,PASSWORD,PORT,DB_WRITE)
 
-        df_movie = pd.read_sql_table('yts_movies',conn_read)
+        df = pd.read_sql_table('yts_movies',conn_read)
+        df_movie = getChanges(df,'yts_movies',conn_write)
 
         drop_columns = ['title_english','title_long','slug','description_full','peers',
                         'synopsis','mpa_rating','background_image','seeds','url_tt',
@@ -61,7 +62,7 @@ def DataRefinement():
         df_movie['genre_1'] = df_movie['genre_1'].str.upper()
         df_movie['genre_2'] = df_movie['genre_2'].str.upper()
         df_movie['genre_3'] = df_movie['genre_3'].str.upper()
-        df_movie['genre_4'] = df_movie['genre_3'].str.upper()
+        df_movie['genre_4'] = df_movie['genre_4'].str.upper()
 
         df_movie['uploaded_torrent_at'] = pd.to_datetime(df_movie['uploaded_torrent_at'],errors='coerce')
         df_movie['uploaded_content_at'] = pd.to_datetime(df_movie['uploaded_content_at'],errors='coerce')
@@ -69,8 +70,11 @@ def DataRefinement():
         df_movie['loaded_at'] = pd.to_datetime(dt_now)
         df_movie['loaded_by'] = user
 
-        truncateTable('yts_movies',dbconn)
-        df_movie.to_sql(name='yts_movies',con=conn_write,if_exists='append',index=False)
+        logging.info('Starting incremental load')
+        
+        InsertToMySQL(df_movie,dbconn,'yts_movies')
+
+        logging.info('Complete incremental load')
 
         lines_number = len(df_movie.index)
 
