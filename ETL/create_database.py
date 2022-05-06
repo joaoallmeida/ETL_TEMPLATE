@@ -3,7 +3,8 @@ from configparser import ConfigParser
 import os
 import logging
 
-log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# ## Inicial Config
+log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
 def createDB():
 
