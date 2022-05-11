@@ -4,8 +4,6 @@ from ETL import refined
 from ETL import load_star_schema
 import logging
 
-# TODO: Criar tabela de log/monitoramento
-
 # ## Inicial Config
 log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
