@@ -1,5 +1,30 @@
-USE db_movies_bronze;
+USE control;
+CREATE TABLE IF NOT EXISTS etl_process (
 
+    process_id INT AUTO_INCREMENT PRIMARY KEY,
+    process TEXT,
+    created_by TEXT,
+    created_at DATETIME,
+    updated_at DATETIME
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ;
+
+CREATE TABLE IF NOT EXISTS etl_logging (
+
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    process_id INT NOT NULL,
+    table_name TEXT,
+    start_date DATETIME NOT NULL,
+    complete_date DATETIME ,
+    row_count INT DEFAULT 0,
+    status TEXT NOT NULL,
+    error_message TEXT,
+    
+    CONSTRAINT fk_process FOREIGN KEY (process_id) REFERENCES etl_process(process_id)
+    
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+USE db_movies_bronze;
 CREATE TABLE IF NOT EXISTS yts_movies (
   movie_sk bigint AUTO_INCREMENT PRIMARY KEY,
   id bigint ,

@@ -1,5 +1,6 @@
 from .Connections.db_connection import engineSqlAlchemy, mysqlconnection
 from .Functions.utils_functions import *
+from .Functions.etl_monitor import InsertLog
 from configparser import ConfigParser
 
 import pandas as pd
@@ -14,6 +15,8 @@ log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(level
 
 # Function responsible for refined the raw data.
 def DataRefinement():
+
+    InsertLog(2,'yts_movies','InProgress')
 
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     user = f'{getpass.getuser()}@{socket.gethostname()}'
@@ -77,14 +80,15 @@ def DataRefinement():
         logging.info('Complete incremental load')
 
         lines_number = len(df_movie.index)
+        InsertLog(2,'yts_movies','Complete',lines_number)
+        
+        logging.info(f'Refined lines {lines_number}')
 
     except Exception as e:
         conn_write.close()
         logging.error(f'Error to refinement data: {e}')
+        InsertLog(2,'yts_movies','Error',0,e)
         raise TypeError(e)
     
     finally:
         logging.info('Ending the data refinement process')
-    
-    logging.info(f'Refined lines {lines_number}')
-    # return df_movie

@@ -1,5 +1,6 @@
 from .Connections.connection_api import getResponseData
 from .Connections.db_connection import engineSqlAlchemy, mysqlconnection
+from .Functions.etl_monitor import InsertLog
 from .Functions.utils_functions import *
 from configparser import ConfigParser
 
@@ -27,6 +28,8 @@ def ExtractData():
 
     logging.info('Extracting data from API')
     
+    InsertLog(1,'yts_movies','InProgress')
+
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     user = f'{getpass.getuser()}@{socket.gethostname()}'
     
@@ -40,20 +43,27 @@ def ExtractData():
         df = addNewColumnToDF(df)
         df = pivotGenreColumn(df)
         df = df.drop_duplicates()
+
         df['extracting_at'] = pd.to_datetime(dt_now)
         df['extracting_by'] = user
         
         logging.info('Get load data')
         df = getChanges(df,'yts_movies',dbconn)
         
-        logging.info('Incremental load')
+        logging.info('Start Incremental Load')
+
         InsertToMySQL(df,mysqlconn,'yts_movies')
         
+        logging.info('Complete Incremental Load')
+
         lines = len(df.index)
+        InsertLog(1,'yts_movies','Complete',lines)
+
         logging.info(f'Insert lines: {lines}')
-        
+
     except Exception as e:
         logging.error(f'Error in extract process: {e}',exc_info=False)
+        InsertLog(1,'yts_movies','Error',0,e)
         raise TypeError(e)
     
     finally:
