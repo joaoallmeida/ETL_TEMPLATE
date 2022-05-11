@@ -1,4 +1,4 @@
-USE control;
+USE monitoring;
 CREATE TABLE IF NOT EXISTS etl_process (
 
     process_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS etl_logging (
     
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-USE db_movies_bronze;
+USE bronze;
 CREATE TABLE IF NOT EXISTS yts_movies (
   movie_sk bigint AUTO_INCREMENT PRIMARY KEY,
   id bigint ,
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS yts_movies (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- db_movies_silver.yts_movies definition
-USE db_movies_silver;
+USE silver;
 CREATE TABLE IF NOT EXISTS yts_movies (
   movie_sk bigint AUTO_INCREMENT PRIMARY KEY,
   id bigint ,

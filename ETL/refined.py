@@ -16,6 +16,7 @@ log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(level
 # Function responsible for refined the raw data.
 def DataRefinement():
 
+    logging.info(f'Starting the data refinement process')
     InsertLog(2,'yts_movies','InProgress')
 
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
@@ -28,10 +29,21 @@ def DataRefinement():
     USER=config['MySql']['user']
     PASSWORD=config['MySql']['pass']
     PORT = 3306
-    DB_READ='db_movies_bronze'
-    DB_WRITE='db_movies_silver'
+    DB_READ='bronze'
+    DB_WRITE='silver'
 
-    logging.info(f'Starting the data refinement process')
+
+    drop_columns = ['title_english','title_long','slug','description_full','peers',
+                    'synopsis','mpa_rating','background_image','seeds','url_tt',
+                    'background_image_original','small_cover_image','date_uploaded_unix_tt',
+                    'state','date_uploaded_unix','medium_cover_image','hash','movie_sk']
+
+    rename_columns = {
+        "url":"url_yts",
+        "date_uploaded_tt":"uploaded_torrent_at",
+        "date_uploaded":"uploaded_content_at",
+        "large_cover_image":"banner_image"
+        }
     
     try:
 
@@ -42,17 +54,6 @@ def DataRefinement():
         df = pd.read_sql_table('yts_movies',conn_read)
         df_movie = getChanges(df,'yts_movies',conn_write)
 
-        drop_columns = ['title_english','title_long','slug','description_full','peers',
-                        'synopsis','mpa_rating','background_image','seeds','url_tt',
-                        'background_image_original','small_cover_image','date_uploaded_unix_tt',
-                        'state','date_uploaded_unix','medium_cover_image','hash','movie_sk']
-
-        rename_columns = {
-            "url":"url_yts",
-            "date_uploaded_tt":"uploaded_torrent_at",
-            "date_uploaded":"uploaded_content_at",
-            "large_cover_image":"banner_image"
-            }
 
         df_movie = df_movie.drop(drop_columns,axis=1)
         df_movie = df_movie.drop_duplicates().reset_index(drop=True)
@@ -85,7 +86,6 @@ def DataRefinement():
         logging.info(f'Refined lines {lines_number}')
 
     except Exception as e:
-        conn_write.close()
         logging.error(f'Error to refinement data: {e}')
         InsertLog(2,'yts_movies','Error',0,e)
         raise TypeError(e)

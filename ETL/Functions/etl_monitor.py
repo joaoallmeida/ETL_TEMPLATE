@@ -5,19 +5,20 @@ from configparser import ConfigParser
 from datetime import datetime
 import pandas as pd
 
-config = ConfigParser()
-config.read('ETL/Connections/credencials.ini')
-
-HOST=config['MySql']['host']
-USER=config['MySql']['user']
-PASSWORD=config['MySql']['pass']
-DB='control'
-PORT=3306
-
-dbconn = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB)
-mysqlconn = mysqlconnection(HOST,USER,PASSWORD,PORT,DB)
 
 def InsertLog(process_id, table, status, row_count = 0, error=None):
+    
+    config = ConfigParser()
+    config.read('ETL/Connections/credencials.ini')
+
+    HOST=config['MySql']['host']
+    USER=config['MySql']['user']
+    PASSWORD=config['MySql']['pass']
+    DB='monitoring'
+    PORT=3306
+
+    dbconn = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB)
+    mysqlconn = mysqlconnection(HOST,USER,PASSWORD,PORT,DB)
 
     try:
         log_table = 'etl_logging'

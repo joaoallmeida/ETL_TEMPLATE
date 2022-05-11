@@ -14,22 +14,21 @@ import getpass
 # ## Inicial Config
 log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
-config = ConfigParser()
-config.read('ETL/Connections/credencials.ini')
-
-HOST=config['MySql']['host']
-USER=config['MySql']['user']
-PASSWORD=config['MySql']['pass']
-DB='db_movies_bronze'
-PORT=3306
-
 # * Function responsible for extacting data from the api
 def ExtractData():
 
     logging.info('Extracting data from API')
-    
     InsertLog(1,'yts_movies','InProgress')
 
+    config = ConfigParser()
+    config.read('ETL/Connections/credencials.ini')
+
+    HOST=config['MySql']['host']
+    USER=config['MySql']['user']
+    PASSWORD=config['MySql']['pass']
+    DB='bronze'
+    PORT=3306
+    
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     user = f'{getpass.getuser()}@{socket.gethostname()}'
     
@@ -51,9 +50,7 @@ def ExtractData():
         df = getChanges(df,'yts_movies',dbconn)
         
         logging.info('Start Incremental Load')
-
         InsertToMySQL(df,mysqlconn,'yts_movies')
-        
         logging.info('Complete Incremental Load')
 
         lines = len(df.index)
