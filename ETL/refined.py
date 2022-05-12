@@ -14,10 +14,10 @@ import logging
 log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
 # Function responsible for refined the raw data.
-def DataRefinement():
+def DataRefinement(TableName):
 
     logging.info(f'Starting the data refinement process')
-    InsertLog(2,'yts_movies','InProgress')
+    InsertLog(2,TableName,'InProgress')
 
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     user = f'{getpass.getuser()}@{socket.gethostname()}'
@@ -51,8 +51,8 @@ def DataRefinement():
         conn_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
         dbconn = mysqlconnection(HOST,USER,PASSWORD,PORT,DB_WRITE)
 
-        df = pd.read_sql_table('yts_movies',conn_read)
-        df_movie = getChanges(df,'yts_movies',conn_write)
+        df = pd.read_sql_table(TableName,conn_read)
+        df_movie = getChanges(df,TableName,conn_write)
 
         df_movie = df_movie.drop(drop_columns,axis=1)
         df_movie = df_movie.drop_duplicates().reset_index(drop=True)
@@ -71,18 +71,18 @@ def DataRefinement():
 
         logging.info('Starting incremental load')
         
-        InsertToMySQL(df_movie,dbconn,'yts_movies')
+        InsertToMySQL(df_movie,dbconn,TableName)
 
         logging.info('Complete incremental load')
 
         lines_number = len(df_movie.index)
-        InsertLog(2,'yts_movies','Complete',lines_number)
+        InsertLog(2,TableName,'Complete',lines_number)
         
         logging.info(f'Refined lines {lines_number}')
 
     except Exception as e:
         logging.error(f'Error to refinement data: {e}')
-        InsertLog(2,'yts_movies','Error',0,e)
+        InsertLog(2,TableName,'Error',0,e)
         raise TypeError(e)
     
     finally:

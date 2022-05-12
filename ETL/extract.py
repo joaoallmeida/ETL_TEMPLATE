@@ -15,7 +15,7 @@ import getpass
 log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
 # * Function responsible for extacting data from the api
-def ExtractData():
+def ExtractData(TableName):
 
     logging.info('Extracting data from API')
     InsertLog(1,'yts_movies','InProgress')
@@ -47,20 +47,20 @@ def ExtractData():
         df['extracting_by'] = user
         
         logging.info('Get load data')
-        df = getChanges(df,'yts_movies',dbconn)
+        df = getChanges(df,TableName,dbconn)
         
         logging.info('Start Incremental Load')
-        InsertToMySQL(df,mysqlconn,'yts_movies')
+        InsertToMySQL(df,mysqlconn,TableName)
         logging.info('Complete Incremental Load')
 
         lines = len(df.index)
-        InsertLog(1,'yts_movies','Complete',lines)
+        InsertLog(1,TableName,'Complete',lines)
 
         logging.info(f'Insert lines: {lines}')
 
     except Exception as e:
         logging.error(f'Error in extract process: {e}',exc_info=False)
-        InsertLog(1,'yts_movies','Error',0,e)
+        InsertLog(1,TableName,'Error',0,e)
         raise TypeError(e)
     
     finally:
