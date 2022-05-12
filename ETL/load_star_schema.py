@@ -77,12 +77,11 @@ def LoadStartSchema():
 
         InsertLog(3,'DimGenres','InProgress')
 
-        genres_columns = ["genre_0","genre_1","genre_2"
-                        ,"genre_3","genre_4",'created_at'
+        genres_columns = ["genre",'created_at'
                         ,'updated_at','loaded_at','loaded_by']
 
         df_genres = df.copy()
-        df_genres = df_genres[genres_columns[:5]]
+        df_genres = df_genres[genres_columns[:1]]
         df_genres = df_genres.drop_duplicates().reset_index(drop=True)
         df_genres['created_at'] = pd.to_datetime(dt_now)
         df_genres['updated_at'] = pd.to_datetime(dt_now)
@@ -117,7 +116,7 @@ def LoadStartSchema():
 
         df = df.drop(['loaded_at','loaded_by'],axis=1)
         df_fat = pd.merge(df ,df_torrent ,how='inner' , on=torrent_columns[:7]).drop(torrent_columns ,axis=1)
-        df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:5]).drop(genres_columns ,axis=1)
+        df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:1]).drop(genres_columns ,axis=1)
         df_fat = df_fat.rename(fat_columns,axis=1)
         df_fat['created_at'] = pd.to_datetime(dt_now)
         df_fat['updated_at'] = pd.to_datetime(dt_now)

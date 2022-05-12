@@ -39,8 +39,8 @@ def ExtractData():
         dbconn = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB)
         
         df = getResponseData()
-        df = addNewColumnToDF(df)
-        df = pivotGenreColumn(df)
+        df = getTorrentValue(df)
+        df = getGenresValue(df)
         df = df.drop_duplicates()
 
         df['extracting_at'] = pd.to_datetime(dt_now)

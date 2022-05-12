@@ -23,7 +23,7 @@ def truncateTable(table,dbconn):
         logging.info('Complete Truncate table')
 
 
-def addNewColumnToDF(df):
+def getTorrentValue(df):
     torrent_list = list()
 
     try:
@@ -45,20 +45,20 @@ def addNewColumnToDF(df):
     
     return df_merge
 
-def pivotGenreColumn(df):
+def getGenresValue(df):
 
     try:
-        
-        d = df[df['genres'].notna()][['id','genres']].to_dict()
-        df_aux = pd.DataFrame(data=d['genres'].values(),index=d['id'].values()).add_prefix('genre_').reset_index()
-        df_merge = df.merge(df_aux, left_on='id', right_on='index',how='left')
-        df_merge = df_merge.drop(['genres','index'],axis=1)
-        
+    
+        df = df.copy()
+        df = df[~df['genres'].isna()]
+        df['genres'] = df['genres'].str.get(0)
+        df = df.rename({"genres":"genre"},axis=1)
+    
     except Exception as e:
         logging.error(e)
         raise TypeError(e)
-    
-    return df_merge
+
+    return df
 
 def InsertToMySQL(df,dbconn,table):
     
