@@ -54,33 +54,38 @@ def DataRefinement(TableName):
         df = pd.read_sql_table(TableName,conn_read)
         df_movie = getChanges(df,TableName,conn_write)
 
-        df_movie = getTorrentValue(df_movie)
+        if len(df_movie.index) > 0 :
 
-        df_movie = df_movie.drop(drop_columns,axis=1)
-        df_movie = df_movie.drop_duplicates().reset_index(drop=True)
-        df_movie = df_movie.rename(rename_columns,axis=1)
+            df_movie = getTorrentValue(df_movie)
+            df_movie = df_movie.drop(drop_columns,axis=1)
+            df_movie = df_movie.drop_duplicates().reset_index(drop=True)
+            df_movie = df_movie.rename(rename_columns,axis=1)
 
-        df_movie['title'] = df_movie['title'].str.upper()
-        df_movie['language'] = df_movie['language'].str.upper()
-        df_movie['type'] = df_movie['type'].str.upper()
-        df_movie['genres'] = df_movie['genres'].str.upper()
+            df_movie['title'] = df_movie['title'].str.upper()
+            df_movie['language'] = df_movie['language'].str.upper()
+            df_movie['type'] = df_movie['type'].str.upper()
+            df_movie['genres'] = df_movie['genres'].str.upper()
 
-        df_movie['uploaded_torrent_at'] = pd.to_datetime(df_movie['uploaded_torrent_at'],errors='coerce')
-        df_movie['uploaded_content_at'] = pd.to_datetime(df_movie['uploaded_content_at'],errors='coerce')
+            df_movie['uploaded_torrent_at'] = pd.to_datetime(df_movie['uploaded_torrent_at'],errors='coerce')
+            df_movie['uploaded_content_at'] = pd.to_datetime(df_movie['uploaded_content_at'],errors='coerce')
 
-        df_movie['loaded_at'] = pd.to_datetime(dt_now)
-        df_movie['loaded_by'] = user
+            df_movie['loaded_at'] = pd.to_datetime(dt_now)
+            df_movie['loaded_by'] = user
 
-        logging.info('Starting incremental load')
+            logging.info('Starting incremental load')
+            
+            InsertToMySQL(df_movie,dbconn,TableName)
+
+            logging.info('Complete incremental load')
+
+            lines_number = len(df_movie.index)
+            InsertLog(2,TableName,'Complete',lines_number)
+            
+            logging.info(f'Refined lines {lines_number}')
         
-        InsertToMySQL(df_movie,dbconn,TableName)
-
-        logging.info('Complete incremental load')
-
-        lines_number = len(df_movie.index)
-        InsertLog(2,TableName,'Complete',lines_number)
-        
-        logging.info(f'Refined lines {lines_number}')
+        else:
+            logging.info('Not found changes')
+            InsertLog(2,TableName,'Complete',0)
 
     except Exception as e:
         logging.error(f'Error to refinement data: {e}')
