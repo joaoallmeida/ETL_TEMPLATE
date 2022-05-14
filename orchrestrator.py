@@ -11,9 +11,9 @@ def main():
     
     logging.info(f'Starting Process')
     
-    create_database.createDB()
-    extract.ExtractData('yts_movies')
-    refined.DataRefinement('yts_movies')
+    # create_database.createDB()
+    # extract.ExtractData('yts_movies')
+    # refined.DataRefinement('yts_movies')
     load_star_schema.LoadStartSchema()
     
     logging.info('Completing Process')

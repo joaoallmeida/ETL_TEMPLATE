@@ -1,6 +1,9 @@
 import logging
 import pandas as pd
+import json
 
+# ## Inicial Config
+log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
 def truncateTable(table,dbconn):
 
@@ -30,7 +33,7 @@ def getTorrentValue(df):
         data = df[~df['torrents'].isna()]
 
         for a,b in data.iterrows():
-            for t in b.torrents:
+            for t in json.loads(b.torrents):
                 t['id'] = b.id
                 t['url_torrent'] = f"magnet:?xt=urn:btih:{t['hash']}&dn={b.title}-{t['quality']}-{t['type']}&tr=http://track.one:1234/announce&tr=udp://open.demonii.com:1337/announce&tr=udp://tracker.openbittorrent.com:80&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://glotorrents.pw:6969/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://torrent.gresille.org:80/announce&tr=udp://p4p.arenabg.com:1337&tr=udp://tracker.leechers-paradise.org:6969"
                 torrent_list.append(t)
@@ -45,15 +48,12 @@ def getTorrentValue(df):
     
     return df_merge
 
-def getGenresValue(df):
+def convertToJson(df,cols):
 
     try:
-    
-        df = df.copy()
-        df = df[~df['genres'].isna()]
-        df['genres'] = df['genres'].str.get(0)
-        df = df.rename({"genres":"genre"},axis=1)
-    
+        for col in cols:
+            df[col] = df[col].apply(lambda x: json.dumps(x))
+
     except Exception as e:
         logging.error(e)
         raise TypeError(e)

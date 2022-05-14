@@ -54,6 +54,8 @@ def DataRefinement(TableName):
         df = pd.read_sql_table(TableName,conn_read)
         df_movie = getChanges(df,TableName,conn_write)
 
+        df_movie = getTorrentValue(df_movie)
+
         df_movie = df_movie.drop(drop_columns,axis=1)
         df_movie = df_movie.drop_duplicates().reset_index(drop=True)
         df_movie = df_movie.rename(rename_columns,axis=1)
@@ -61,7 +63,7 @@ def DataRefinement(TableName):
         df_movie['title'] = df_movie['title'].str.upper()
         df_movie['language'] = df_movie['language'].str.upper()
         df_movie['type'] = df_movie['type'].str.upper()
-        df_movie['genre'] = df_movie['genre'].str.upper()
+        df_movie['genres'] = df_movie['genres'].str.upper()
 
         df_movie['uploaded_torrent_at'] = pd.to_datetime(df_movie['uploaded_torrent_at'],errors='coerce')
         df_movie['uploaded_content_at'] = pd.to_datetime(df_movie['uploaded_content_at'],errors='coerce')

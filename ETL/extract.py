@@ -33,15 +33,13 @@ def ExtractData(TableName):
     user = f'{getpass.getuser()}@{socket.gethostname()}'
     
     try:
-        # Creating SqlAlchemy engine and MySql Connection for connect to database and doing a minimal transformation on the raw data to insert into table. 
+        # Creating SqlAlchemy engine and MySql Connection for connect to database. 
         
         mysqlconn = mysqlconnection(HOST,USER,PASSWORD,PORT,DB)
         dbconn = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB)
         
         df = getResponseData()
-        df = getTorrentValue(df)
-        df = getGenresValue(df)
-        df = df.drop_duplicates()
+        df = convertToJson(df,['genres','torrents'])
 
         df['extracting_at'] = pd.to_datetime(dt_now)
         df['extracting_by'] = user

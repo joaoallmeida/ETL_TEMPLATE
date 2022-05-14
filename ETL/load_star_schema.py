@@ -77,7 +77,7 @@ def LoadStartSchema():
 
         InsertLog(3,'DimGenres','InProgress')
 
-        genres_columns = ["genre",'created_at'
+        genres_columns = ["genres",'created_at'
                         ,'updated_at','loaded_at','loaded_by']
 
         df_genres = df.copy()
