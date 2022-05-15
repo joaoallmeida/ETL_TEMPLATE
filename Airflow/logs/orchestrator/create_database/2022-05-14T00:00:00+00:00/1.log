@@ -1,0 +1,432 @@
+[2022-05-15 18:53:36,219] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 18:53:36,219] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database manual__2022-05-15T18:53:33.015653+00:00 [queued]>
+[2022-05-15 18:53:36,299] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 18:53:36,299] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 18:53:36,299] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 18:53:36,299] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 18:53:36,309] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database manual__2022-05-15T18:53:33.015653+00:00 [queued]>
+[2022-05-15 18:53:36,310] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 18:53:36,310] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 18:53:36,310] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 18:53:36,376] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-14 00:00:00+00:00
+[2022-05-15 18:53:36,380] {standard_task_runner.py:52} INFO - Started process 207 to run task
+[2022-05-15 18:53:36,384] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '32', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmp9wp2r9mz', '--error-file', '/tmp/tmpynfyvx8_']
+[2022-05-15 18:53:36,385] {standard_task_runner.py:77} INFO - Job 32: Subtask create_database
+[2022-05-15 18:53:36,397] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-15 18:53:33.015653+00:00
+[2022-05-15 18:53:36,402] {standard_task_runner.py:52} INFO - Started process 208 to run task
+[2022-05-15 18:53:36,405] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'manual__2022-05-15T18:53:33.015653+00:00', '--job-id', '33', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmp9q5uen67', '--error-file', '/tmp/tmpsposgvum']
+[2022-05-15 18:53:36,406] {standard_task_runner.py:77} INFO - Job 33: Subtask create_database
+[2022-05-15 18:53:36,527] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [running]> on host 82123893ae64
+[2022-05-15 18:53:36,540] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database manual__2022-05-15T18:53:33.015653+00:00 [running]> on host 82123893ae64
+[2022-05-15 18:53:36,715] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-15T18:53:33.015653+00:00
+AIRFLOW_CTX_DAG_RUN_ID=manual__2022-05-15T18:53:33.015653+00:00
+[2022-05-15 18:53:36,716] {create_database.py:11} INFO - Starting creating databases
+[2022-05-15 18:53:36,717] {taskinstance.py:1686} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/create_database.py", line 16, in createDB
+    HOST=config['MySql']['host']
+  File "/usr/local/lib/python3.6/configparser.py", line 959, in __getitem__
+    raise KeyError(key)
+KeyError: 'MySql'
+[2022-05-15 18:53:36,730] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 18:53:36,731] {create_database.py:11} INFO - Starting creating databases
+[2022-05-15 18:53:36,731] {taskinstance.py:1686} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/create_database.py", line 16, in createDB
+    HOST=config['MySql']['host']
+  File "/usr/local/lib/python3.6/configparser.py", line 959, in __getitem__
+    raise KeyError(key)
+KeyError: 'MySql'
+[2022-05-15 18:53:36,745] {taskinstance.py:1280} INFO - Marking task as UP_FOR_RETRY. dag_id=orchestrator, task_id=create_database, execution_date=20220515T185333, start_date=20220515T185336, end_date=20220515T185336
+[2022-05-15 18:53:36,759] {taskinstance.py:1280} INFO - Marking task as UP_FOR_RETRY. dag_id=orchestrator, task_id=create_database, execution_date=20220514T000000, start_date=20220515T185336, end_date=20220515T185336
+[2022-05-15 18:53:36,877] {standard_task_runner.py:91} ERROR - Failed to execute job 32 for task create_database
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/task/task_runner/standard_task_runner.py", line 85, in _start_by_fork
+    args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/cli_parser.py", line 48, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/cli.py", line 92, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 292, in task_run
+    _run_task_by_selected_method(args, dag, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 107, in _run_task_by_selected_method
+    _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 184, in _run_raw_task
+    error_file=args.error_file,
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/session.py", line 70, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/create_database.py", line 16, in createDB
+    HOST=config['MySql']['host']
+  File "/usr/local/lib/python3.6/configparser.py", line 959, in __getitem__
+    raise KeyError(key)
+KeyError: 'MySql'
+[2022-05-15 18:53:36,888] {standard_task_runner.py:91} ERROR - Failed to execute job 33 for task create_database
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/task/task_runner/standard_task_runner.py", line 85, in _start_by_fork
+    args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/cli_parser.py", line 48, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/cli.py", line 92, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 292, in task_run
+    _run_task_by_selected_method(args, dag, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 107, in _run_task_by_selected_method
+    _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 184, in _run_raw_task
+    error_file=args.error_file,
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/session.py", line 70, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/create_database.py", line 16, in createDB
+    HOST=config['MySql']['host']
+  File "/usr/local/lib/python3.6/configparser.py", line 959, in __getitem__
+    raise KeyError(key)
+KeyError: 'MySql'
+[2022-05-15 18:53:36,917] {local_task_job.py:154} INFO - Task exited with return code 1
+[2022-05-15 18:53:36,938] {local_task_job.py:154} INFO - Task exited with return code 1
+[2022-05-15 18:53:37,008] {local_task_job.py:264} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 18:53:37,020] {local_task_job.py:264} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:10:29,955] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database manual__2022-05-15T19:10:28.562996+00:00 [queued]>
+[2022-05-15 19:10:29,971] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:10:30,050] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:10:30,050] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:10:30,050] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:10:30,051] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:10:30,061] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database manual__2022-05-15T19:10:28.562996+00:00 [queued]>
+[2022-05-15 19:10:30,061] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:10:30,061] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:10:30,062] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:10:30,106] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:10:30,111] {standard_task_runner.py:52} INFO - Started process 909 to run task
+[2022-05-15 19:10:30,116] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '35', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmps2qlfpni', '--error-file', '/tmp/tmpp5s7c4xn']
+[2022-05-15 19:10:30,116] {standard_task_runner.py:77} INFO - Job 35: Subtask create_database
+[2022-05-15 19:10:30,116] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-15 19:10:28.562996+00:00
+[2022-05-15 19:10:30,121] {standard_task_runner.py:52} INFO - Started process 910 to run task
+[2022-05-15 19:10:30,125] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'manual__2022-05-15T19:10:28.562996+00:00', '--job-id', '34', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpkx999u52', '--error-file', '/tmp/tmpm5hdw307']
+[2022-05-15 19:10:30,126] {standard_task_runner.py:77} INFO - Job 34: Subtask create_database
+[2022-05-15 19:10:30,194] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [running]> on host 82123893ae64
+[2022-05-15 19:10:30,204] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database manual__2022-05-15T19:10:28.562996+00:00 [running]> on host 82123893ae64
+[2022-05-15 19:10:30,326] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:10:30,327] {create_database.py:12} INFO - Starting creating databases
+[2022-05-15 19:10:30,349] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-15T19:10:28.562996+00:00
+AIRFLOW_CTX_DAG_RUN_ID=manual__2022-05-15T19:10:28.562996+00:00
+[2022-05-15 19:10:30,350] {create_database.py:12} INFO - Starting creating databases
+[2022-05-15 19:10:30,352] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:10:30,355] {create_database.py:34} INFO - Reading file create_database.sql
+[2022-05-15 19:10:30,369] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:10:30,372] {create_database.py:34} INFO - Reading file create_database.sql
+[2022-05-15 19:10:30,617] {create_database.py:34} INFO - Reading file create_tables.sql
+[2022-05-15 19:10:30,650] {create_database.py:34} INFO - Reading file create_tables.sql
+[2022-05-15 19:10:30,895] {create_database.py:53} INFO - Complete creation of databases
+[2022-05-15 19:10:30,896] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:10:30,917] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=create_database, execution_date=20220514T000000, start_date=20220515T191029, end_date=20220515T191030
+[2022-05-15 19:10:30,928] {create_database.py:53} INFO - Complete creation of databases
+[2022-05-15 19:10:30,928] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:10:30,948] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=create_database, execution_date=20220515T191028, start_date=20220515T191029, end_date=20220515T191030
+[2022-05-15 19:10:30,969] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:10:30,979] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:10:31,060] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:10:31,105] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:22:21,610] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database manual__2022-05-15T19:22:19.061955+00:00 [queued]>
+[2022-05-15 19:22:21,755] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database manual__2022-05-15T19:22:19.061955+00:00 [queued]>
+[2022-05-15 19:22:21,755] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:22:21,755] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:22:21,755] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:22:21,803] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-15 19:22:19.061955+00:00
+[2022-05-15 19:22:21,807] {standard_task_runner.py:52} INFO - Started process 324 to run task
+[2022-05-15 19:22:21,813] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'manual__2022-05-15T19:22:19.061955+00:00', '--job-id', '40', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmp2qiruukf', '--error-file', '/tmp/tmpfrfcuacr']
+[2022-05-15 19:22:21,815] {standard_task_runner.py:77} INFO - Job 40: Subtask create_database
+[2022-05-15 19:22:21,897] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database manual__2022-05-15T19:22:19.061955+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:22:22,041] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-15T19:22:19.061955+00:00
+AIRFLOW_CTX_DAG_RUN_ID=manual__2022-05-15T19:22:19.061955+00:00
+[2022-05-15 19:22:22,041] {create_database.py:12} INFO - Starting creating databases
+[2022-05-15 19:22:22,059] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:22:22,061] {create_database.py:34} INFO - Reading file create_database.sql
+[2022-05-15 19:22:22,197] {create_database.py:34} INFO - Reading file create_tables.sql
+[2022-05-15 19:22:22,332] {create_database.py:53} INFO - Complete creation of databases
+[2022-05-15 19:22:22,332] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:22:22,381] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=create_database, execution_date=20220515T192219, start_date=20220515T192221, end_date=20220515T192222
+[2022-05-15 19:22:22,424] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:22:22,535] {local_task_job.py:264} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:22:23,211] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:22:23,328] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:22:23,329] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:22:23,329] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:22:23,329] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:22:23,378] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:22:23,382] {standard_task_runner.py:52} INFO - Started process 328 to run task
+[2022-05-15 19:22:23,386] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '42', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmp52mi3k3n', '--error-file', '/tmp/tmpqvcz_lfw']
+[2022-05-15 19:22:23,387] {standard_task_runner.py:77} INFO - Job 42: Subtask create_database
+[2022-05-15 19:22:23,453] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:22:23,616] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:22:23,617] {create_database.py:12} INFO - Starting creating databases
+[2022-05-15 19:22:23,634] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:22:23,636] {create_database.py:34} INFO - Reading file create_database.sql
+[2022-05-15 19:22:23,901] {create_database.py:34} INFO - Reading file create_tables.sql
+[2022-05-15 19:22:24,210] {create_database.py:53} INFO - Complete creation of databases
+[2022-05-15 19:22:24,211] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:22:24,253] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=create_database, execution_date=20220514T000000, start_date=20220515T192223, end_date=20220515T192224
+[2022-05-15 19:22:24,320] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:22:24,443] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:34:51,757] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:34:51,856] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:34:51,856] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:34:51,856] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:34:51,857] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:34:51,900] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:34:51,904] {standard_task_runner.py:52} INFO - Started process 862 to run task
+[2022-05-15 19:34:51,908] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '46', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpp73owomq', '--error-file', '/tmp/tmp49_h3kx9']
+[2022-05-15 19:34:51,908] {standard_task_runner.py:77} INFO - Job 46: Subtask create_database
+[2022-05-15 19:34:51,987] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:34:52,202] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:34:52,203] {create_database.py:12} INFO - Starting creating databases
+[2022-05-15 19:34:52,225] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:34:52,227] {create_database.py:34} INFO - Reading file create_database.sql
+[2022-05-15 19:34:52,379] {create_database.py:34} INFO - Reading file create_tables.sql
+[2022-05-15 19:34:52,556] {create_database.py:53} INFO - Complete creation of databases
+[2022-05-15 19:34:52,556] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:34:52,578] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=create_database, execution_date=20220514T000000, start_date=20220515T193451, end_date=20220515T193452
+[2022-05-15 19:34:52,641] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:34:52,721] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:42:57,617] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:42:57,626] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database manual__2022-05-15T19:42:55.820330+00:00 [queued]>
+[2022-05-15 19:42:57,696] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:42:57,696] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:42:57,696] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:42:57,696] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:42:57,706] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database manual__2022-05-15T19:42:55.820330+00:00 [queued]>
+[2022-05-15 19:42:57,707] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:42:57,707] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:42:57,707] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:42:57,740] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:42:57,744] {standard_task_runner.py:52} INFO - Started process 1200 to run task
+[2022-05-15 19:42:57,748] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '49', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpxmkfix3n', '--error-file', '/tmp/tmp3yit5_4n']
+[2022-05-15 19:42:57,748] {standard_task_runner.py:77} INFO - Job 49: Subtask create_database
+[2022-05-15 19:42:57,751] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-15 19:42:55.820330+00:00
+[2022-05-15 19:42:57,756] {standard_task_runner.py:52} INFO - Started process 1201 to run task
+[2022-05-15 19:42:57,759] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'manual__2022-05-15T19:42:55.820330+00:00', '--job-id', '50', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpaie79i40', '--error-file', '/tmp/tmpkk10b70x']
+[2022-05-15 19:42:57,760] {standard_task_runner.py:77} INFO - Job 50: Subtask create_database
+[2022-05-15 19:42:57,820] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:42:57,830] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database manual__2022-05-15T19:42:55.820330+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:42:57,957] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:42:57,957] {create_database.py:12} INFO - Starting creating databases
+[2022-05-15 19:42:57,975] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:42:57,975] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-15T19:42:55.820330+00:00
+AIRFLOW_CTX_DAG_RUN_ID=manual__2022-05-15T19:42:55.820330+00:00
+[2022-05-15 19:42:57,975] {create_database.py:12} INFO - Starting creating databases
+[2022-05-15 19:42:57,994] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:42:58,231] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:42:58,235] {create_database.py:27} INFO - Reading file create_database.sql
+[2022-05-15 19:42:58,279] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:42:58,282] {create_database.py:27} INFO - Reading file create_database.sql
+[2022-05-15 19:42:58,566] {create_database.py:27} INFO - Reading file create_tables.sql
+[2022-05-15 19:42:58,693] {create_database.py:27} INFO - Reading file create_tables.sql
+[2022-05-15 19:42:59,156] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:42:59,207] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:42:59,409] {create_database.py:49} INFO - Complete creation of databases
+[2022-05-15 19:42:59,410] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:42:59,410] {create_database.py:49} INFO - Complete creation of databases
+[2022-05-15 19:42:59,410] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:42:59,430] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=create_database, execution_date=20220515T194255, start_date=20220515T194257, end_date=20220515T194259
+[2022-05-15 19:42:59,431] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=create_database, execution_date=20220514T000000, start_date=20220515T194257, end_date=20220515T194259
+[2022-05-15 19:42:59,496] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:42:59,565] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:42:59,570] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:42:59,637] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:47:14,374] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database manual__2022-05-15T19:47:12.935448+00:00 [queued]>
+[2022-05-15 19:47:14,477] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database manual__2022-05-15T19:47:12.935448+00:00 [queued]>
+[2022-05-15 19:47:14,477] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:47:14,477] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:47:14,478] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:47:14,519] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-15 19:47:12.935448+00:00
+[2022-05-15 19:47:14,524] {standard_task_runner.py:52} INFO - Started process 1392 to run task
+[2022-05-15 19:47:14,527] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'manual__2022-05-15T19:47:12.935448+00:00', '--job-id', '57', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpt3_ipe64', '--error-file', '/tmp/tmpkip3bmbn']
+[2022-05-15 19:47:14,528] {standard_task_runner.py:77} INFO - Job 57: Subtask create_database
+[2022-05-15 19:47:14,622] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database manual__2022-05-15T19:47:12.935448+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:47:14,828] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-15T19:47:12.935448+00:00
+AIRFLOW_CTX_DAG_RUN_ID=manual__2022-05-15T19:47:12.935448+00:00
+[2022-05-15 19:47:14,829] {create_database.py:12} INFO - Starting creating databases
+[2022-05-15 19:47:14,858] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:15,102] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:15,105] {create_database.py:27} INFO - Reading file create_database.sql
+[2022-05-15 19:47:15,312] {create_database.py:27} INFO - Reading file create_tables.sql
+[2022-05-15 19:47:15,523] {create_database.py:44} INFO - Complete creation of databases
+[2022-05-15 19:47:15,538] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:15,734] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:47:15,776] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=create_database, execution_date=20220515T194712, start_date=20220515T194714, end_date=20220515T194715
+[2022-05-15 19:47:15,863] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:47:15,998] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:47:22,547] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:47:22,599] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:47:22,599] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:47:22,599] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:47:22,599] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:47:22,633] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:47:22,637] {standard_task_runner.py:52} INFO - Started process 1403 to run task
+[2022-05-15 19:47:22,642] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '59', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpqrqhk4s9', '--error-file', '/tmp/tmpx097f3l6']
+[2022-05-15 19:47:22,642] {standard_task_runner.py:77} INFO - Job 59: Subtask create_database
+[2022-05-15 19:47:22,730] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:47:22,890] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:47:22,891] {create_database.py:12} INFO - Starting creating databases
+[2022-05-15 19:47:22,912] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:23,075] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:23,078] {create_database.py:27} INFO - Reading file create_database.sql
+[2022-05-15 19:47:23,285] {create_database.py:27} INFO - Reading file create_tables.sql
+[2022-05-15 19:47:23,462] {create_database.py:44} INFO - Complete creation of databases
+[2022-05-15 19:47:23,480] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:23,688] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:47:23,730] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=create_database, execution_date=20220514T000000, start_date=20220515T194722, end_date=20220515T194723
+[2022-05-15 19:47:23,815] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:47:23,930] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:49:29,300] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:49:29,390] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:49:29,390] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:49:29,390] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:49:29,390] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:49:29,432] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): create_database> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:49:29,438] {standard_task_runner.py:52} INFO - Started process 1500 to run task
+[2022-05-15 19:49:29,442] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'create_database', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '65', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpi88bg_br', '--error-file', '/tmp/tmpkvv01ft0']
+[2022-05-15 19:49:29,443] {standard_task_runner.py:77} INFO - Job 65: Subtask create_database
+[2022-05-15 19:49:29,514] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.create_database scheduled__2022-05-14T00:00:00+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:49:29,630] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=create_database
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:49:29,631] {create_database.py:12} INFO - Starting creating databases
+[2022-05-15 19:49:29,648] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:49:29,846] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:49:29,849] {create_database.py:27} INFO - Reading file create_database.sql
+[2022-05-15 19:49:30,036] {create_database.py:27} INFO - Reading file create_tables.sql
+[2022-05-15 19:49:30,258] {create_database.py:44} INFO - Complete creation of databases
+[2022-05-15 19:49:30,288] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:49:30,524] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:49:30,563] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=create_database, execution_date=20220514T000000, start_date=20220515T194929, end_date=20220515T194930
+[2022-05-15 19:49:30,658] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:49:30,777] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check

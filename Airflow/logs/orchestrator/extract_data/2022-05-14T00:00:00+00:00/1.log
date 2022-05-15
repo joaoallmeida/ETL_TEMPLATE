@@ -1,0 +1,694 @@
+[2022-05-15 19:10:32,105] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:10:28.562996+00:00 [queued]>
+[2022-05-15 19:10:32,115] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:10:32,124] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:10:28.562996+00:00 [queued]>
+[2022-05-15 19:10:32,125] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:10:32,125] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:10:32,125] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:10:32,136] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:10:32,136] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:10:32,136] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:10:32,136] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:10:32,158] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): extract_data> on 2022-05-15 19:10:28.562996+00:00
+[2022-05-15 19:10:32,162] {standard_task_runner.py:52} INFO - Started process 913 to run task
+[2022-05-15 19:10:32,166] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'extract_data', 'manual__2022-05-15T19:10:28.562996+00:00', '--job-id', '36', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmp4tbw85fb', '--error-file', '/tmp/tmpnrefx012']
+[2022-05-15 19:10:32,166] {standard_task_runner.py:77} INFO - Job 36: Subtask extract_data
+[2022-05-15 19:10:32,168] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): extract_data> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:10:32,172] {standard_task_runner.py:52} INFO - Started process 914 to run task
+[2022-05-15 19:10:32,176] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'extract_data', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '37', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpk1x9d_t1', '--error-file', '/tmp/tmp0ahaj3qo']
+[2022-05-15 19:10:32,177] {standard_task_runner.py:77} INFO - Job 37: Subtask extract_data
+[2022-05-15 19:10:32,233] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:10:28.562996+00:00 [running]> on host 82123893ae64
+[2022-05-15 19:10:32,244] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [running]> on host 82123893ae64
+[2022-05-15 19:10:32,374] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=extract_data
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-15T19:10:28.562996+00:00
+AIRFLOW_CTX_DAG_RUN_ID=manual__2022-05-15T19:10:28.562996+00:00
+[2022-05-15 19:10:32,375] {extract.py:20} INFO - Extracting data from API
+[2022-05-15 19:10:32,375] {taskinstance.py:1686} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/extract.py", line 21, in ExtractData
+    InsertLog(1,'yts_movies','InProgress')
+  File "/opt/airflow/dags/ETL/Functions/etl_monitor.py", line 14, in InsertLog
+    HOST=config['MySql']['host']
+  File "/usr/local/lib/python3.6/configparser.py", line 959, in __getitem__
+    raise KeyError(key)
+KeyError: 'MySql'
+[2022-05-15 19:10:32,385] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=extract_data
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:10:32,387] {extract.py:20} INFO - Extracting data from API
+[2022-05-15 19:10:32,387] {taskinstance.py:1686} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/extract.py", line 21, in ExtractData
+    InsertLog(1,'yts_movies','InProgress')
+  File "/opt/airflow/dags/ETL/Functions/etl_monitor.py", line 14, in InsertLog
+    HOST=config['MySql']['host']
+  File "/usr/local/lib/python3.6/configparser.py", line 959, in __getitem__
+    raise KeyError(key)
+KeyError: 'MySql'
+[2022-05-15 19:10:32,397] {taskinstance.py:1280} INFO - Marking task as UP_FOR_RETRY. dag_id=orchestrator, task_id=extract_data, execution_date=20220515T191028, start_date=20220515T191032, end_date=20220515T191032
+[2022-05-15 19:10:32,412] {taskinstance.py:1280} INFO - Marking task as UP_FOR_RETRY. dag_id=orchestrator, task_id=extract_data, execution_date=20220514T000000, start_date=20220515T191032, end_date=20220515T191032
+[2022-05-15 19:10:32,424] {standard_task_runner.py:91} ERROR - Failed to execute job 36 for task extract_data
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/task/task_runner/standard_task_runner.py", line 85, in _start_by_fork
+    args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/cli_parser.py", line 48, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/cli.py", line 92, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 292, in task_run
+    _run_task_by_selected_method(args, dag, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 107, in _run_task_by_selected_method
+    _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 184, in _run_raw_task
+    error_file=args.error_file,
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/session.py", line 70, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/extract.py", line 21, in ExtractData
+    InsertLog(1,'yts_movies','InProgress')
+  File "/opt/airflow/dags/ETL/Functions/etl_monitor.py", line 14, in InsertLog
+    HOST=config['MySql']['host']
+  File "/usr/local/lib/python3.6/configparser.py", line 959, in __getitem__
+    raise KeyError(key)
+KeyError: 'MySql'
+[2022-05-15 19:10:32,437] {standard_task_runner.py:91} ERROR - Failed to execute job 37 for task extract_data
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/task/task_runner/standard_task_runner.py", line 85, in _start_by_fork
+    args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/cli_parser.py", line 48, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/cli.py", line 92, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 292, in task_run
+    _run_task_by_selected_method(args, dag, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 107, in _run_task_by_selected_method
+    _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 184, in _run_raw_task
+    error_file=args.error_file,
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/session.py", line 70, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/extract.py", line 21, in ExtractData
+    InsertLog(1,'yts_movies','InProgress')
+  File "/opt/airflow/dags/ETL/Functions/etl_monitor.py", line 14, in InsertLog
+    HOST=config['MySql']['host']
+  File "/usr/local/lib/python3.6/configparser.py", line 959, in __getitem__
+    raise KeyError(key)
+KeyError: 'MySql'
+[2022-05-15 19:10:32,457] {local_task_job.py:154} INFO - Task exited with return code 1
+[2022-05-15 19:10:32,467] {local_task_job.py:154} INFO - Task exited with return code 1
+[2022-05-15 19:10:32,546] {local_task_job.py:264} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:10:32,557] {local_task_job.py:264} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:22:23,152] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:22:19.061955+00:00 [queued]>
+[2022-05-15 19:22:23,235] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:22:19.061955+00:00 [queued]>
+[2022-05-15 19:22:23,235] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:22:23,236] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:22:23,236] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:22:23,356] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): extract_data> on 2022-05-15 19:22:19.061955+00:00
+[2022-05-15 19:22:23,362] {standard_task_runner.py:52} INFO - Started process 327 to run task
+[2022-05-15 19:22:23,366] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'extract_data', 'manual__2022-05-15T19:22:19.061955+00:00', '--job-id', '41', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmp4ceth2sr', '--error-file', '/tmp/tmp8dnsmp7w']
+[2022-05-15 19:22:23,367] {standard_task_runner.py:77} INFO - Job 41: Subtask extract_data
+[2022-05-15 19:22:23,430] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:22:19.061955+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:22:23,616] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=extract_data
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-15T19:22:19.061955+00:00
+AIRFLOW_CTX_DAG_RUN_ID=manual__2022-05-15T19:22:19.061955+00:00
+[2022-05-15 19:22:23,617] {extract.py:20} INFO - Extracting data from API
+[2022-05-15 19:22:23,634] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:22:24,791] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:22:25,679] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:22:25,720] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:22:25,720] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:22:25,720] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:22:25,721] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:22:25,786] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): extract_data> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:22:25,791] {standard_task_runner.py:52} INFO - Started process 337 to run task
+[2022-05-15 19:22:25,794] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'extract_data', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '43', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpfg9ck7o6', '--error-file', '/tmp/tmpk7gupwoy']
+[2022-05-15 19:22:25,795] {standard_task_runner.py:77} INFO - Job 43: Subtask extract_data
+[2022-05-15 19:22:25,863] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:22:25,991] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=extract_data
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:22:25,992] {extract.py:20} INFO - Extracting data from API
+[2022-05-15 19:22:26,009] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:22:26,156] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:22:37,681] {extract.py:45} INFO - Get load data
+[2022-05-15 19:22:37,718] {utils_functions.py:98} ERROR - Table TableName not found
+[2022-05-15 19:22:37,718] {extract.py:58} ERROR - Error in extract process: Table TableName not found
+[2022-05-15 19:22:37,749] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:22:38,064] {extract.py:63} INFO - Completing extract from api
+[2022-05-15 19:22:38,065] {taskinstance.py:1686} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 269, in read_sql_table
+    meta.reflect(only=[table_name], views=True)
+  File "/home/airflow/.local/lib/python3.6/site-packages/sqlalchemy/sql/schema.py", line 4612, in reflect
+    "in %r%s: (%s)" % (bind.engine, s, ", ".join(missing))
+sqlalchemy.exc.InvalidRequestError: Could not reflect: requested table(s) not available in Engine(mysql+pymysql://db_user:***@192.168.15.14:3306/bronze): (TableName)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 92, in getChanges
+    df_target = pd.read_sql_table(table, dbconn)
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 271, in read_sql_table
+    raise ValueError(f"Table {table_name} not found") from err
+ValueError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/extract.py", line 46, in ExtractData
+    df = getChanges(df,TableName,dbconn)
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 99, in getChanges
+    raise TypeError(e)
+TypeError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/extract.py", line 60, in ExtractData
+    raise TypeError(e)
+TypeError: Table TableName not found
+[2022-05-15 19:22:38,107] {taskinstance.py:1280} INFO - Marking task as UP_FOR_RETRY. dag_id=orchestrator, task_id=extract_data, execution_date=20220515T192219, start_date=20220515T192223, end_date=20220515T192238
+[2022-05-15 19:22:38,214] {standard_task_runner.py:91} ERROR - Failed to execute job 41 for task extract_data
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 269, in read_sql_table
+    meta.reflect(only=[table_name], views=True)
+  File "/home/airflow/.local/lib/python3.6/site-packages/sqlalchemy/sql/schema.py", line 4612, in reflect
+    "in %r%s: (%s)" % (bind.engine, s, ", ".join(missing))
+sqlalchemy.exc.InvalidRequestError: Could not reflect: requested table(s) not available in Engine(mysql+pymysql://db_user:***@192.168.15.14:3306/bronze): (TableName)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 92, in getChanges
+    df_target = pd.read_sql_table(table, dbconn)
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 271, in read_sql_table
+    raise ValueError(f"Table {table_name} not found") from err
+ValueError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/extract.py", line 46, in ExtractData
+    df = getChanges(df,TableName,dbconn)
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 99, in getChanges
+    raise TypeError(e)
+TypeError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/task/task_runner/standard_task_runner.py", line 85, in _start_by_fork
+    args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/cli_parser.py", line 48, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/cli.py", line 92, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 292, in task_run
+    _run_task_by_selected_method(args, dag, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 107, in _run_task_by_selected_method
+    _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 184, in _run_raw_task
+    error_file=args.error_file,
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/session.py", line 70, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/extract.py", line 60, in ExtractData
+    raise TypeError(e)
+TypeError: Table TableName not found
+[2022-05-15 19:22:38,269] {local_task_job.py:154} INFO - Task exited with return code 1
+[2022-05-15 19:22:38,369] {local_task_job.py:264} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:22:42,867] {extract.py:45} INFO - Get load data
+[2022-05-15 19:22:42,888] {utils_functions.py:98} ERROR - Table TableName not found
+[2022-05-15 19:22:42,888] {extract.py:58} ERROR - Error in extract process: Table TableName not found
+[2022-05-15 19:22:42,905] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:22:43,058] {extract.py:63} INFO - Completing extract from api
+[2022-05-15 19:22:43,059] {taskinstance.py:1686} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 269, in read_sql_table
+    meta.reflect(only=[table_name], views=True)
+  File "/home/airflow/.local/lib/python3.6/site-packages/sqlalchemy/sql/schema.py", line 4612, in reflect
+    "in %r%s: (%s)" % (bind.engine, s, ", ".join(missing))
+sqlalchemy.exc.InvalidRequestError: Could not reflect: requested table(s) not available in Engine(mysql+pymysql://db_user:***@192.168.15.14:3306/bronze): (TableName)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 92, in getChanges
+    df_target = pd.read_sql_table(table, dbconn)
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 271, in read_sql_table
+    raise ValueError(f"Table {table_name} not found") from err
+ValueError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/extract.py", line 46, in ExtractData
+    df = getChanges(df,TableName,dbconn)
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 99, in getChanges
+    raise TypeError(e)
+TypeError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/extract.py", line 60, in ExtractData
+    raise TypeError(e)
+TypeError: Table TableName not found
+[2022-05-15 19:22:43,092] {taskinstance.py:1280} INFO - Marking task as UP_FOR_RETRY. dag_id=orchestrator, task_id=extract_data, execution_date=20220514T000000, start_date=20220515T192225, end_date=20220515T192243
+[2022-05-15 19:22:43,129] {standard_task_runner.py:91} ERROR - Failed to execute job 43 for task extract_data
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 269, in read_sql_table
+    meta.reflect(only=[table_name], views=True)
+  File "/home/airflow/.local/lib/python3.6/site-packages/sqlalchemy/sql/schema.py", line 4612, in reflect
+    "in %r%s: (%s)" % (bind.engine, s, ", ".join(missing))
+sqlalchemy.exc.InvalidRequestError: Could not reflect: requested table(s) not available in Engine(mysql+pymysql://db_user:***@192.168.15.14:3306/bronze): (TableName)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 92, in getChanges
+    df_target = pd.read_sql_table(table, dbconn)
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 271, in read_sql_table
+    raise ValueError(f"Table {table_name} not found") from err
+ValueError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/extract.py", line 46, in ExtractData
+    df = getChanges(df,TableName,dbconn)
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 99, in getChanges
+    raise TypeError(e)
+TypeError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/task/task_runner/standard_task_runner.py", line 85, in _start_by_fork
+    args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/cli_parser.py", line 48, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/cli.py", line 92, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 292, in task_run
+    _run_task_by_selected_method(args, dag, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 107, in _run_task_by_selected_method
+    _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 184, in _run_raw_task
+    error_file=args.error_file,
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/session.py", line 70, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/extract.py", line 60, in ExtractData
+    raise TypeError(e)
+TypeError: Table TableName not found
+[2022-05-15 19:22:43,169] {local_task_job.py:154} INFO - Task exited with return code 1
+[2022-05-15 19:22:43,262] {local_task_job.py:264} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:34:54,439] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:34:54,519] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:34:54,519] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:34:54,519] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:34:54,520] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:34:54,574] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): extract_data> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:34:54,579] {standard_task_runner.py:52} INFO - Started process 864 to run task
+[2022-05-15 19:34:54,584] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'extract_data', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '47', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmp6ukpk0qf', '--error-file', '/tmp/tmpv6eqlk0l']
+[2022-05-15 19:34:54,584] {standard_task_runner.py:77} INFO - Job 47: Subtask extract_data
+[2022-05-15 19:34:54,664] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:34:54,806] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=extract_data
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:34:54,807] {extract.py:20} INFO - Extracting data from API
+[2022-05-15 19:34:54,827] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:34:55,005] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:35:13,285] {extract.py:45} INFO - Get load data
+[2022-05-15 19:35:13,301] {utils_functions.py:98} ERROR - Table TableName not found
+[2022-05-15 19:35:13,301] {extract.py:58} ERROR - Error in extract process: Table TableName not found
+[2022-05-15 19:35:13,316] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:35:13,529] {extract.py:63} INFO - Completing extract from api
+[2022-05-15 19:35:13,529] {taskinstance.py:1686} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 269, in read_sql_table
+    meta.reflect(only=[table_name], views=True)
+  File "/home/airflow/.local/lib/python3.6/site-packages/sqlalchemy/sql/schema.py", line 4612, in reflect
+    "in %r%s: (%s)" % (bind.engine, s, ", ".join(missing))
+sqlalchemy.exc.InvalidRequestError: Could not reflect: requested table(s) not available in Engine(mysql+pymysql://db_user:***@192.168.15.14:3306/bronze): (TableName)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 92, in getChanges
+    df_target = pd.read_sql_table(table, dbconn)
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 271, in read_sql_table
+    raise ValueError(f"Table {table_name} not found") from err
+ValueError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/extract.py", line 46, in ExtractData
+    df = getChanges(df,TableName,dbconn)
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 99, in getChanges
+    raise TypeError(e)
+TypeError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/extract.py", line 60, in ExtractData
+    raise TypeError(e)
+TypeError: Table TableName not found
+[2022-05-15 19:35:13,555] {taskinstance.py:1280} INFO - Marking task as UP_FOR_RETRY. dag_id=orchestrator, task_id=extract_data, execution_date=20220514T000000, start_date=20220515T193454, end_date=20220515T193513
+[2022-05-15 19:35:13,602] {standard_task_runner.py:91} ERROR - Failed to execute job 47 for task extract_data
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 269, in read_sql_table
+    meta.reflect(only=[table_name], views=True)
+  File "/home/airflow/.local/lib/python3.6/site-packages/sqlalchemy/sql/schema.py", line 4612, in reflect
+    "in %r%s: (%s)" % (bind.engine, s, ", ".join(missing))
+sqlalchemy.exc.InvalidRequestError: Could not reflect: requested table(s) not available in Engine(mysql+pymysql://db_user:***@192.168.15.14:3306/bronze): (TableName)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 92, in getChanges
+    df_target = pd.read_sql_table(table, dbconn)
+  File "/home/airflow/.local/lib/python3.6/site-packages/pandas/io/sql.py", line 271, in read_sql_table
+    raise ValueError(f"Table {table_name} not found") from err
+ValueError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/airflow/dags/ETL/extract.py", line 46, in ExtractData
+    df = getChanges(df,TableName,dbconn)
+  File "/opt/airflow/dags/ETL/Functions/utils_functions.py", line 99, in getChanges
+    raise TypeError(e)
+TypeError: Table TableName not found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/task/task_runner/standard_task_runner.py", line 85, in _start_by_fork
+    args.func(args, dag=self.dag)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/cli_parser.py", line 48, in command
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/cli.py", line 92, in wrapper
+    return f(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 292, in task_run
+    _run_task_by_selected_method(args, dag, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 107, in _run_task_by_selected_method
+    _run_raw_task(args, ti)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/cli/commands/task_command.py", line 184, in _run_raw_task
+    error_file=args.error_file,
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/utils/session.py", line 70, in wrapper
+    return func(*args, session=session, **kwargs)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1324, in _run_raw_task
+    self._execute_task_with_callbacks(context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1443, in _execute_task_with_callbacks
+    result = self._execute_task(context, self.task)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/models/taskinstance.py", line 1494, in _execute_task
+    result = execute_callable(context=context)
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 151, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.6/site-packages/airflow/operators/python.py", line 162, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/ETL/extract.py", line 60, in ExtractData
+    raise TypeError(e)
+TypeError: Table TableName not found
+[2022-05-15 19:35:13,653] {local_task_job.py:154} INFO - Task exited with return code 1
+[2022-05-15 19:35:13,768] {local_task_job.py:264} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:43:00,349] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:43:00,358] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:42:55.820330+00:00 [queued]>
+[2022-05-15 19:43:00,436] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:42:55.820330+00:00 [queued]>
+[2022-05-15 19:43:00,437] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:43:00,437] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:43:00,437] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:43:00,447] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:43:00,448] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:43:00,448] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:43:00,448] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:43:00,481] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): extract_data> on 2022-05-15 19:42:55.820330+00:00
+[2022-05-15 19:43:00,485] {standard_task_runner.py:52} INFO - Started process 1204 to run task
+[2022-05-15 19:43:00,488] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'extract_data', 'manual__2022-05-15T19:42:55.820330+00:00', '--job-id', '52', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmp3g0928te', '--error-file', '/tmp/tmpt4xv454a']
+[2022-05-15 19:43:00,489] {standard_task_runner.py:77} INFO - Job 52: Subtask extract_data
+[2022-05-15 19:43:00,492] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): extract_data> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:43:00,497] {standard_task_runner.py:52} INFO - Started process 1205 to run task
+[2022-05-15 19:43:00,501] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'extract_data', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '51', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpvahxhm7i', '--error-file', '/tmp/tmpc_c23tu2']
+[2022-05-15 19:43:00,502] {standard_task_runner.py:77} INFO - Job 51: Subtask extract_data
+[2022-05-15 19:43:00,556] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:42:55.820330+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:43:00,566] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:43:00,707] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=extract_data
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-15T19:42:55.820330+00:00
+AIRFLOW_CTX_DAG_RUN_ID=manual__2022-05-15T19:42:55.820330+00:00
+[2022-05-15 19:43:00,708] {extract.py:20} INFO - Extracting data from API
+[2022-05-15 19:43:00,717] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=extract_data
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:43:00,718] {extract.py:20} INFO - Extracting data from API
+[2022-05-15 19:43:00,725] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:43:00,735] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:43:00,943] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:43:01,013] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:43:11,856] {extract.py:45} INFO - Get load data
+[2022-05-15 19:43:12,235] {extract.py:48} INFO - Start Incremental Load
+[2022-05-15 19:43:12,247] {extract.py:50} INFO - Complete Incremental Load
+[2022-05-15 19:43:12,276] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:43:12,774] {extract.py:45} INFO - Get load data
+[2022-05-15 19:43:13,082] {extract.py:55} INFO - Insert lines: 0
+[2022-05-15 19:43:13,082] {extract.py:63} INFO - Completing extract from api
+[2022-05-15 19:43:13,082] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:43:13,103] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=extract_data, execution_date=20220514T000000, start_date=20220515T194300, end_date=20220515T194313
+[2022-05-15 19:43:13,113] {extract.py:48} INFO - Start Incremental Load
+[2022-05-15 19:43:13,119] {extract.py:50} INFO - Complete Incremental Load
+[2022-05-15 19:43:13,134] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:43:13,219] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:43:13,288] {extract.py:55} INFO - Insert lines: 0
+[2022-05-15 19:43:13,288] {extract.py:63} INFO - Completing extract from api
+[2022-05-15 19:43:13,289] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:43:13,309] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=extract_data, execution_date=20220515T194255, start_date=20220515T194300, end_date=20220515T194313
+[2022-05-15 19:43:13,339] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:43:13,390] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:43:13,473] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:47:17,341] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:47:12.935448+00:00 [queued]>
+[2022-05-15 19:47:17,429] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:47:12.935448+00:00 [queued]>
+[2022-05-15 19:47:17,430] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:47:17,430] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:47:17,430] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:47:17,496] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): extract_data> on 2022-05-15 19:47:12.935448+00:00
+[2022-05-15 19:47:17,502] {standard_task_runner.py:52} INFO - Started process 1394 to run task
+[2022-05-15 19:47:17,507] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'extract_data', 'manual__2022-05-15T19:47:12.935448+00:00', '--job-id', '58', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmp90avlzdf', '--error-file', '/tmp/tmp50pl5g6t']
+[2022-05-15 19:47:17,508] {standard_task_runner.py:77} INFO - Job 58: Subtask extract_data
+[2022-05-15 19:47:17,580] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.extract_data manual__2022-05-15T19:47:12.935448+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:47:17,721] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=extract_data
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-15T19:47:12.935448+00:00
+AIRFLOW_CTX_DAG_RUN_ID=manual__2022-05-15T19:47:12.935448+00:00
+[2022-05-15 19:47:17,722] {extract.py:20} INFO - Extracting data from API
+[2022-05-15 19:47:17,741] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:17,967] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:25,264] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:47:25,306] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:47:25,307] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:47:25,307] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:47:25,307] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:47:25,351] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): extract_data> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:47:25,356] {standard_task_runner.py:52} INFO - Started process 1405 to run task
+[2022-05-15 19:47:25,361] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'extract_data', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '60', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpxddxvswt', '--error-file', '/tmp/tmpcdjjy6l8']
+[2022-05-15 19:47:25,362] {standard_task_runner.py:77} INFO - Job 60: Subtask extract_data
+[2022-05-15 19:47:25,442] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:47:25,568] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=extract_data
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:47:25,569] {extract.py:20} INFO - Extracting data from API
+[2022-05-15 19:47:25,586] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:25,752] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:35,948] {extract.py:45} INFO - Get load data
+[2022-05-15 19:47:36,262] {extract.py:48} INFO - Start Incremental Load
+[2022-05-15 19:47:36,441] {extract.py:50} INFO - Complete Incremental Load
+[2022-05-15 19:47:36,479] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:36,630] {extract.py:55} INFO - Insert lines: 26
+[2022-05-15 19:47:36,630] {extract.py:63} INFO - Completing extract from api
+[2022-05-15 19:47:36,631] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:47:36,670] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=extract_data, execution_date=20220515T194712, start_date=20220515T194717, end_date=20220515T194736
+[2022-05-15 19:47:36,776] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:47:36,867] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:47:37,855] {extract.py:45} INFO - Get load data
+[2022-05-15 19:47:38,244] {extract.py:48} INFO - Start Incremental Load
+[2022-05-15 19:47:38,255] {extract.py:50} INFO - Complete Incremental Load
+[2022-05-15 19:47:38,271] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:47:38,395] {extract.py:55} INFO - Insert lines: 0
+[2022-05-15 19:47:38,395] {extract.py:63} INFO - Completing extract from api
+[2022-05-15 19:47:38,395] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:47:38,417] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=extract_data, execution_date=20220514T000000, start_date=20220515T194725, end_date=20220515T194738
+[2022-05-15 19:47:38,544] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:47:38,610] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2022-05-15 19:49:31,854] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:49:31,920] {taskinstance.py:1035} INFO - Dependencies all met for <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [queued]>
+[2022-05-15 19:49:31,920] {taskinstance.py:1241} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:49:31,920] {taskinstance.py:1242} INFO - Starting attempt 1 of 2
+[2022-05-15 19:49:31,920] {taskinstance.py:1243} INFO - 
+--------------------------------------------------------------------------------
+[2022-05-15 19:49:31,964] {taskinstance.py:1262} INFO - Executing <Task(PythonOperator): extract_data> on 2022-05-14 00:00:00+00:00
+[2022-05-15 19:49:31,971] {standard_task_runner.py:52} INFO - Started process 1502 to run task
+[2022-05-15 19:49:31,974] {standard_task_runner.py:76} INFO - Running: ['***', 'tasks', 'run', 'orchestrator', 'extract_data', 'scheduled__2022-05-14T00:00:00+00:00', '--job-id', '66', '--raw', '--subdir', 'DAGS_FOLDER/pipeline.py', '--cfg-path', '/tmp/tmpfp3t2aib', '--error-file', '/tmp/tmplg4_uwnf']
+[2022-05-15 19:49:31,975] {standard_task_runner.py:77} INFO - Job 66: Subtask extract_data
+[2022-05-15 19:49:32,058] {logging_mixin.py:109} INFO - Running <TaskInstance: orchestrator.extract_data scheduled__2022-05-14T00:00:00+00:00 [running]> on host 87efc59194bd
+[2022-05-15 19:49:32,250] {taskinstance.py:1414} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_EMAIL=***@example.com
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=orchestrator
+AIRFLOW_CTX_TASK_ID=extract_data
+AIRFLOW_CTX_EXECUTION_DATE=2022-05-14T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-05-14T00:00:00+00:00
+[2022-05-15 19:49:32,251] {extract.py:20} INFO - Extracting data from API
+[2022-05-15 19:49:32,272] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:49:32,502] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:49:48,991] {extract.py:45} INFO - Get load data
+[2022-05-15 19:49:49,335] {extract.py:48} INFO - Start Incremental Load
+[2022-05-15 19:49:49,341] {extract.py:50} INFO - Complete Incremental Load
+[2022-05-15 19:49:49,360] {base.py:79} INFO - Using connection to: id: MySql Localhost. Host: 192.168.15.14, Port: 3306, Schema: , Login: db_user, Password: ***, extra: {}
+[2022-05-15 19:49:49,504] {extract.py:55} INFO - Insert lines: 0
+[2022-05-15 19:49:49,505] {extract.py:63} INFO - Completing extract from api
+[2022-05-15 19:49:49,505] {python.py:152} INFO - Done. Returned value was: None
+[2022-05-15 19:49:49,531] {taskinstance.py:1280} INFO - Marking task as SUCCESS. dag_id=orchestrator, task_id=extract_data, execution_date=20220514T000000, start_date=20220515T194931, end_date=20220515T194949
+[2022-05-15 19:49:49,661] {local_task_job.py:154} INFO - Task exited with return code 0
+[2022-05-15 19:49:49,795] {local_task_job.py:264} INFO - 1 downstream tasks scheduled from follow-on schedule check
