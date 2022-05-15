@@ -24,18 +24,6 @@ CREATE TABLE IF NOT EXISTS etl_logging (
     
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- INSERT INTO monitoring.etl_process (process, created_by, created_at, updated_at)
--- VALUES('Database', USER() , NOW(), NULL);
-
--- INSERT INTO monitoring.etl_process (process, created_by, created_at, updated_at)
--- VALUES('Extract', USER(), NOW(), NULL);
-
--- INSERT INTO monitoring.etl_process (process, created_by, created_at, updated_at)
--- VALUES('Transform', USER(), NOW(), NULL);
-
--- INSERT INTO monitoring.etl_process (process, created_by, created_at, updated_at)
--- VALUES('Load', USER(), NOW(), NULL);
-
 USE bronze;
 CREATE TABLE IF NOT EXISTS yts_movies (
     movie_sk bigint AUTO_INCREMENT PRIMARY KEY,

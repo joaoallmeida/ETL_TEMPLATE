@@ -1,6 +1,6 @@
-from .Connections.db_connection import engineSqlAlchemy
-from .Functions.etl_monitor import InsertLog
-from configparser import ConfigParser
+from ETL.Connections.db_connection import engineSqlAlchemy
+from ETL.Functions.etl_monitor import InsertLog
+from airflow.hooks.base import BaseHook
 
 import pandas as pd
 import datetime
@@ -19,12 +19,10 @@ def LoadStartSchema():
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     user = f'{getpass.getuser()}@{socket.gethostname()}'
 
-    config = ConfigParser()
-    config.read('ETL/Connections/credencials.ini')
-
-    HOST=config['MySql']['host']
-    USER=config['MySql']['user']
-    PASSWORD=config['MySql']['pass']
+    conn = BaseHook.get_connection('MySql Localhost')
+    HOST=conn.host
+    USER=conn.login
+    PASSWORD=conn.password
     PORT=3306
     DB_READ='silver'
     DB_WRITE='gold'
@@ -40,7 +38,7 @@ def LoadStartSchema():
         # ## Dim Torrent
         logging.info('Creating Dim Torrent')
 
-        InsertLog(3,'DimTorrent','InProgress')
+        InsertLog(4,'DimTorrent','InProgress')
 
 
         torrent_columns = ["url_torrent","size","size_bytes"
@@ -59,14 +57,14 @@ def LoadStartSchema():
         df_torrent.to_sql('DimTorrent',dbcon_write,if_exists='replace',index=False)
         
         lines = len(df_torrent.index)
-        InsertLog(3,'DimTorrent','Complete',lines)
+        InsertLog(4,'DimTorrent','Complete',lines)
 
         logging.info(f'Insert lines in Dim Torrent { lines }')
         logging.info('Completed creation Dim Torrent')
 
     except Exception as e:
         logging.error(f'Error to load start schema: {e}')
-        InsertLog(3,'DimTorrent','Error',0,e)
+        InsertLog(4,'DimTorrent','Error',0,e)
         raise TypeError(e)
 
     try:
@@ -75,7 +73,7 @@ def LoadStartSchema():
 
         logging.info('Creating Dim Genres')
 
-        InsertLog(3,'DimGenres','InProgress')
+        InsertLog(4,'DimGenres','InProgress')
 
         genres_columns = ["genres",'created_at'
                         ,'updated_at','loaded_at','loaded_by']
@@ -92,14 +90,14 @@ def LoadStartSchema():
         df_genres.to_sql('DimGenres',dbcon_write,if_exists='replace',index=False)
         
         lines = len(df_genres.index)
-        InsertLog(3,'DimGenres','Complete',lines)
+        InsertLog(4,'DimGenres','Complete',lines)
 
         logging.info(f'Insert lines in Dim Genres { lines }')
         logging.info('Completed creation Dim Genres')
 
     except Exception as e:
         logging.error(f'Error to load start schema: {e}')
-        InsertLog(3,'DimGenres','Error',0,e)
+        InsertLog(4,'DimGenres','Error',0,e)
         raise TypeError(e)
 
     try:
@@ -107,11 +105,11 @@ def LoadStartSchema():
         # ## Fat Movies
 
         logging.info('Creating Fat Movies')
-        InsertLog(3,'FatMovies','InProgress')
+        InsertLog(4,'FatMovies','InProgress')
 
         fat_columns = {
             'id':'movie_id',
-            'imdb_code':'IMDB'
+            'imdb_code':'imdb'
         }
 
         df = df.drop(['loaded_at','loaded_by'],axis=1)
@@ -126,14 +124,14 @@ def LoadStartSchema():
         df_fat.to_sql('FatMovies',dbcon_write,if_exists='replace',index=False)
 
         lines = len(df_fat.index)
-        InsertLog(3,'FatMovies','Complete',lines)
+        InsertLog(4,'FatMovies','Complete',lines)
 
         logging.info(f'Insert lines in Fat Movies { lines }')
         logging.info('Completed creation Fat Movies')
         
     except Exception as e:
         logging.error(f'Error to load start schema: {e}')
-        InsertLog(3,'FatMovies','Error',0,e)
+        InsertLog(4,'FatMovies','Error',0,e)
         raise TypeError(e)
     
     finally:

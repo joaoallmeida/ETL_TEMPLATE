@@ -1,7 +1,7 @@
 from ETL import create_database
 from ETL import extract
 from ETL import refined
-from ETL import load_star_schema
+from ETL import load
 import logging
 
 # ## Inicial Config
@@ -14,7 +14,7 @@ def main():
     create_database.createDB()
     extract.ExtractData('yts_movies')
     refined.DataRefinement('yts_movies')
-    load_star_schema.LoadStartSchema()
+    load.LoadStartSchema()
     
     logging.info('Completing Process')
     

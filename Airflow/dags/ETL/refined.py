@@ -1,7 +1,7 @@
 from ETL.Connections.db_connection import engineSqlAlchemy, mysqlconnection
 from ETL.Functions.utils_functions import *
 from ETL.Functions.etl_monitor import InsertLog
-from configparser import ConfigParser
+from airflow.hooks.base import BaseHook
 
 import pandas as pd
 import datetime
@@ -17,21 +17,18 @@ log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(level
 def DataRefinement(TableName):
 
     logging.info(f'Starting the data refinement process')
-    InsertLog(2,TableName,'InProgress')
+    InsertLog(3,TableName,'InProgress')
 
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     user = f'{getpass.getuser()}@{socket.gethostname()}'
 
-    config = ConfigParser()
-    config.read('ETL/Connections/credencials.ini')
-
-    HOST=config['MySql']['host']
-    USER=config['MySql']['user']
-    PASSWORD=config['MySql']['pass']
-    PORT = 3306
+    conn = BaseHook.get_connection('MySql Localhost')
+    HOST=conn.host
+    USER=conn.login
+    PASSWORD=conn.password
+    PORT=3306
     DB_READ='bronze'
     DB_WRITE='silver'
-
 
     drop_columns = ['title_english','title_long','slug','description_full','peers',
                     'synopsis','mpa_rating','background_image','seeds','url_tt',
@@ -79,17 +76,17 @@ def DataRefinement(TableName):
             logging.info('Complete incremental load')
 
             lines_number = len(df_movie.index)
-            InsertLog(2,TableName,'Complete',lines_number)
+            InsertLog(3,TableName,'Complete',lines_number)
             
             logging.info(f'Refined lines {lines_number}')
         
         else:
             logging.info('Not found changes')
-            InsertLog(2,TableName,'Complete',0)
+            InsertLog(3,TableName,'Complete',0)
 
     except Exception as e:
         logging.error(f'Error to refinement data: {e}')
-        InsertLog(2,TableName,'Error',0,e)
+        InsertLog(3,TableName,'Error',0,e)
         raise TypeError(e)
     
     finally:

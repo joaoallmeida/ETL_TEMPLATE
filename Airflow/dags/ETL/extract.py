@@ -2,7 +2,7 @@ from ETL.Connections.connection_api import getResponseData
 from ETL.Connections.db_connection import engineSqlAlchemy, mysqlconnection
 from ETL.Functions.etl_monitor import InsertLog
 from ETL.Functions.utils_functions import *
-from configparser import ConfigParser
+from airflow.hooks.base import BaseHook
 
 import logging
 import pandas as pd
@@ -18,17 +18,15 @@ log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(level
 def ExtractData(TableName):
 
     logging.info('Extracting data from API')
-    InsertLog(1,'yts_movies','InProgress')
+    InsertLog(2,TableName,'InProgress')
 
-    config = ConfigParser()
-    config.read('ETL/Connections/credencials.ini')
-
-    HOST=config['MySql']['host']
-    USER=config['MySql']['user']
-    PASSWORD=config['MySql']['pass']
-    DB='bronze'
+    conn = BaseHook.get_connection('MySql Localhost')
+    HOST=conn.host
+    USER=conn.login
+    PASSWORD=conn.password
     PORT=3306
-    
+    DB='bronze'
+
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     user = f'{getpass.getuser()}@{socket.gethostname()}'
     
@@ -52,13 +50,13 @@ def ExtractData(TableName):
         logging.info('Complete Incremental Load')
 
         lines = len(df.index)
-        InsertLog(1,TableName,'Complete',lines)
+        InsertLog(2,TableName,'Complete',lines)
 
         logging.info(f'Insert lines: {lines}')
 
     except Exception as e:
         logging.error(f'Error in extract process: {e}',exc_info=False)
-        InsertLog(1,TableName,'Error',0,e)
+        InsertLog(2,TableName,'Error',0,e)
         raise TypeError(e)
     
     finally:
