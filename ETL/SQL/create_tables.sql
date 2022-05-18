@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS yts_movies (
     torrents text,
     date_uploaded timestamp,
     date_uploaded_unix bigint DEFAULT NULL,
-    extracting_at timestamp,
-    extracting_by text
+    extraction_at timestamp,
+    extraction_by text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- db_movies_silver.yts_movies definition
@@ -86,8 +86,8 @@ CREATE TABLE IF NOT EXISTS yts_movies (
     language text,
     banner_image text,
     uploaded_content_at datetime DEFAULT NULL,
-    extracting_at datetime DEFAULT NULL,
-    extracting_by text,
+    extraction_at datetime DEFAULT NULL,
+    extraction_by text,
     quality text,
     type text,
     size text,

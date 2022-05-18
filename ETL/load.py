@@ -40,7 +40,7 @@ def LoadStartSchema():
         # ## Dim Torrent
         logging.info('Creating Dim Torrent')
 
-        InsertLog(3,'DimTorrent','InProgress')
+        InsertLog(4,'DimTorrent','InProgress')
 
 
         torrent_columns = ["url_torrent","size","size_bytes"
@@ -59,14 +59,14 @@ def LoadStartSchema():
         df_torrent.to_sql('DimTorrent',dbcon_write,if_exists='replace',index=False)
         
         lines = len(df_torrent.index)
-        InsertLog(3,'DimTorrent','Complete',lines)
+        InsertLog(4,'DimTorrent','Complete',lines)
 
         logging.info(f'Insert lines in Dim Torrent { lines }')
         logging.info('Completed creation Dim Torrent')
 
     except Exception as e:
         logging.error(f'Error to load start schema: {e}')
-        InsertLog(3,'DimTorrent','Error',0,e)
+        InsertLog(4,'DimTorrent','Error',0,e)
         raise TypeError(e)
 
     try:
@@ -75,7 +75,7 @@ def LoadStartSchema():
 
         logging.info('Creating Dim Genres')
 
-        InsertLog(3,'DimGenres','InProgress')
+        InsertLog(4,'DimGenres','InProgress')
 
         genres_columns = ["genres",'created_at'
                         ,'updated_at','loaded_at','loaded_by']
@@ -92,14 +92,14 @@ def LoadStartSchema():
         df_genres.to_sql('DimGenres',dbcon_write,if_exists='replace',index=False)
         
         lines = len(df_genres.index)
-        InsertLog(3,'DimGenres','Complete',lines)
+        InsertLog(4,'DimGenres','Complete',lines)
 
         logging.info(f'Insert lines in Dim Genres { lines }')
         logging.info('Completed creation Dim Genres')
 
     except Exception as e:
         logging.error(f'Error to load start schema: {e}')
-        InsertLog(3,'DimGenres','Error',0,e)
+        InsertLog(4,'DimGenres','Error',0,e)
         raise TypeError(e)
 
     try:
@@ -108,7 +108,7 @@ def LoadStartSchema():
 
         logging.info('Creating Dim Movie')
 
-        InsertLog(3,'DimMovie','InProgress')
+        InsertLog(4,'DimMovie','InProgress')
 
         movie_columns = ['id','url_yts', 'title', 'summary', 'banner_image',"imdb_code",	"year",	"rating"
                         ,"runtime" ,"yt_trailer_code",'uploaded_content_at','updated_at','loaded_at','loaded_by']
@@ -129,14 +129,14 @@ def LoadStartSchema():
         df_movie.to_sql('DimMovie',dbcon_write,if_exists='replace',index=False)
         
         lines = len(df_movie.index)
-        InsertLog(3,'DimMovie','Complete',lines)
+        InsertLog(4,'DimMovie','Complete',lines)
 
         logging.info(f'Insert lines in Dim Movie { lines }')
         logging.info('Completed creation Dim Movie')
 
     except Exception as e:
         logging.error(f'Error to load start schema: {e}')
-        InsertLog(3,'DimMovie','Error',0,e)
+        InsertLog(4,'DimMovie','Error',0,e)
         raise TypeError(e)
 
     try:
@@ -144,7 +144,7 @@ def LoadStartSchema():
         # ## Fat Movies
 
         logging.info('Creating Fat Movies')
-        InsertLog(3,'FatMovies','InProgress')
+        InsertLog(4,'FatMovies','InProgress')
 
         df_fat = pd.merge(df ,df_torrent ,how='inner' , on=torrent_columns[:7]).drop(torrent_columns ,axis=1)
         df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:1]).drop(genres_columns ,axis=1)
@@ -158,14 +158,14 @@ def LoadStartSchema():
         df_fat.to_sql('FatMovies',dbcon_write,if_exists='replace',index=False)
 
         lines = len(df_fat.index)
-        InsertLog(3,'FatMovies','Complete',lines)
+        InsertLog(4,'FatMovies','Complete',lines)
 
         logging.info(f'Insert lines in Fat Movies { lines }')
         logging.info('Completed creation Fat Movies')
         
     except Exception as e:
         logging.error(f'Error to load start schema: {e}')
-        InsertLog(3,'FatMovies','Error',0,e)
+        InsertLog(4,'FatMovies','Error',0,e)
         raise TypeError(e)
     
     finally:
