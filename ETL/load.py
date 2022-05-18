@@ -33,8 +33,8 @@ def LoadStartSchema():
     dbcon_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
 
     try:
-
-        df = pd.read_sql_table('yts_movies',dbcon_read).drop('movie_sk',axis=1)
+        
+        df = pd.read_sql_table('yts_movies',dbcon_read).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
 
         ## ----- ## -----## ----- ## -----## ----- ## -----
         # ## Dim Torrent
@@ -104,24 +104,56 @@ def LoadStartSchema():
 
     try:
         ## ----- ## -----## ----- ## -----## ----- ## -----
+        # ## Dim Movie
+
+        logging.info('Creating Dim Movie')
+
+        InsertLog(3,'DimMovie','InProgress')
+
+        movie_columns = ['id','url_yts', 'title', 'summary', 'banner_image',"imdb_code",	"year",	"rating"
+                        ,"runtime" ,"yt_trailer_code",'uploaded_content_at','updated_at','loaded_at','loaded_by']
+
+        movie_rename = {
+                    'id':'movie_id'
+                    }
+
+        df_movie = df.copy()
+        df_movie = df_movie[movie_columns[:10]]
+        df_movie = df_movie.drop_duplicates().reset_index(drop=True)
+        df_movie = df_movie.rename(movie_rename,axis=1)
+        df_movie['created_at'] = pd.to_datetime(dt_now)
+        df_movie['updated_at'] = pd.to_datetime(dt_now)
+        df_movie['loaded_at'] = pd.to_datetime(dt_now)
+        df_movie['loaded_by'] = user
+
+        df_movie.to_sql('DimMovie',dbcon_write,if_exists='replace',index=False)
+        
+        lines = len(df_movie.index)
+        InsertLog(3,'DimMovie','Complete',lines)
+
+        logging.info(f'Insert lines in Dim Movie { lines }')
+        logging.info('Completed creation Dim Movie')
+
+    except Exception as e:
+        logging.error(f'Error to load start schema: {e}')
+        InsertLog(3,'DimMovie','Error',0,e)
+        raise TypeError(e)
+
+    try:
+        ## ----- ## -----## ----- ## -----## ----- ## -----
         # ## Fat Movies
 
         logging.info('Creating Fat Movies')
         InsertLog(3,'FatMovies','InProgress')
 
-        fat_columns = {
-            'id':'movie_id',
-            'imdb_code':'imdb'
-        }
-
-        df = df.drop(['loaded_at','loaded_by'],axis=1)
         df_fat = pd.merge(df ,df_torrent ,how='inner' , on=torrent_columns[:7]).drop(torrent_columns ,axis=1)
         df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:1]).drop(genres_columns ,axis=1)
-        df_fat = df_fat.rename(fat_columns,axis=1)
+        df_fat = pd.merge(df_fat ,df_movie ,how='inner' ,on=movie_columns[1:10]).drop(movie_columns ,axis=1)
         df_fat['created_at'] = pd.to_datetime(dt_now)
         df_fat['updated_at'] = pd.to_datetime(dt_now)
         df_fat['loaded_at'] = pd.to_datetime(dt_now)
         df_fat['loaded_by'] = user
+        df_fat = df_fat[['movie_id', 'torrent_id', 'genre_id', 'created_at', 'updated_at', 'extracting_at', 'extracting_by', 'loaded_at','loaded_by']]
 
         df_fat.to_sql('FatMovies',dbcon_write,if_exists='replace',index=False)
 
