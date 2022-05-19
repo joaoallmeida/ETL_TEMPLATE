@@ -39,8 +39,8 @@ def ExtractData(TableName):
         df = getResponseData()
         df = convertToJson(df,['genres','torrents'])
 
-        df['extracting_at'] = pd.to_datetime(dt_now)
-        df['extracting_by'] = user
+        df['extraction_at'] = pd.to_datetime(dt_now)
+        df['extraction_by'] = user
         
         logging.info('Get load data')
         df = getChanges(df,TableName,dbconn)
