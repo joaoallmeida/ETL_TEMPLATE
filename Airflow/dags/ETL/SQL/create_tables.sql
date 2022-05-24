@@ -1,7 +1,7 @@
 USE monitoring;
 CREATE TABLE IF NOT EXISTS etl_process (
 
-    process_id INT AUTO_INCREMENT PRIMARY KEY,
+    process_id INT PRIMARY KEY,
     process TEXT,
     created_by TEXT,
     created_at DATETIME,
@@ -18,23 +18,9 @@ CREATE TABLE IF NOT EXISTS etl_logging (
     complete_date DATETIME ,
     row_count INT DEFAULT 0,
     status TEXT NOT NULL,
-    error_message TEXT,
-    
-    CONSTRAINT fk_process FOREIGN KEY (process_id) REFERENCES etl_process(process_id)
-    
+    error_message TEXT
+
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- INSERT INTO monitoring.etl_process (process, created_by, created_at, updated_at)
--- VALUES('Database', USER() , NOW(), NULL);
-
--- INSERT INTO monitoring.etl_process (process, created_by, created_at, updated_at)
--- VALUES('Extract', USER(), NOW(), NULL);
-
--- INSERT INTO monitoring.etl_process (process, created_by, created_at, updated_at)
--- VALUES('Transform', USER(), NOW(), NULL);
-
--- INSERT INTO monitoring.etl_process (process, created_by, created_at, updated_at)
--- VALUES('Load', USER(), NOW(), NULL);
 
 USE bronze;
 CREATE TABLE IF NOT EXISTS yts_movies (
@@ -69,7 +55,7 @@ CREATE TABLE IF NOT EXISTS yts_movies (
     extraction_by text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- db_movies_silver.yts_movies definition
+
 USE silver;
 CREATE TABLE IF NOT EXISTS yts_movies (
     movie_sk bigint AUTO_INCREMENT PRIMARY KEY,
@@ -97,3 +83,16 @@ CREATE TABLE IF NOT EXISTS yts_movies (
     loaded_at timestamp NULL DEFAULT NULL,
     loaded_by text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- INSERT PROCESS ID
+INSERT IGNORE INTO monitoring.etl_process (process_id, process, created_by, created_at, updated_at)
+VALUES(1,'Database', USER() , NOW(), NULL);
+
+INSERT IGNORE INTO monitoring.etl_process (process_id, process, created_by, created_at, updated_at)
+VALUES(2,'Extract', USER(), NOW(), NULL);
+
+INSERT IGNORE INTO monitoring.etl_process (process_id, process, created_by, created_at, updated_at)
+VALUES(3,'Transform', USER(), NOW(), NULL);
+
+INSERT IGNORE INTO monitoring.etl_process (process_id, process, created_by, created_at, updated_at)
+VALUES(4,'Load', USER(), NOW(), NULL);

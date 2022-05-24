@@ -10,7 +10,6 @@ log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(level
 def createDB():
 
     logging.info('Starting creating databases')
-    InsertLog(1,None,'InProgress')
 
     config = ConfigParser()
     config.read('ETL/Connections/credencials.ini')
@@ -36,6 +35,7 @@ def createDB():
                     
             dbconn.commit()
             
+        InsertLog(1,None,'InProgress')
 
     except Exception as e:
         cursor.close()

@@ -18,7 +18,7 @@ log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(level
 def ExtractData(TableName):
 
     logging.info('Extracting data from API')
-    InsertLog(1,'yts_movies','InProgress')
+    InsertLog(2,'yts_movies','InProgress')
 
     config = ConfigParser()
     config.read('ETL/Connections/credencials.ini')
@@ -33,8 +33,7 @@ def ExtractData(TableName):
     user = f'{getpass.getuser()}@{socket.gethostname()}'
     
     try:
-        # Creating SqlAlchemy engine and MySql Connection for connect to database. 
-        
+    
         mysqlconn = mysqlconnection(HOST,USER,PASSWORD,PORT,DB)
         dbconn = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB)
         
@@ -52,13 +51,13 @@ def ExtractData(TableName):
         logging.info('Complete Incremental Load')
 
         lines = len(df.index)
-        InsertLog(1,TableName,'Complete',lines)
+        InsertLog(2,TableName,'Complete',lines)
 
         logging.info(f'Insert lines: {lines}')
 
     except Exception as e:
         logging.error(f'Error in extract process: {e}',exc_info=False)
-        InsertLog(1,TableName,'Error',0,e)
+        InsertLog(2,TableName,'Error',0,e)
         raise TypeError(e)
     
     finally:

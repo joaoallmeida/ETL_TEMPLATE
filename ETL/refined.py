@@ -17,7 +17,7 @@ log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(level
 def DataRefinement(TableName):
 
     logging.info(f'Starting the data refinement process')
-    InsertLog(2,TableName,'InProgress')
+    InsertLog(3,TableName,'InProgress')
 
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     user = f'{getpass.getuser()}@{socket.gethostname()}'
@@ -79,17 +79,17 @@ def DataRefinement(TableName):
             logging.info('Complete incremental load')
 
             lines_number = len(df_movie.index)
-            InsertLog(2,TableName,'Complete',lines_number)
+            InsertLog(3,TableName,'Complete',lines_number)
             
             logging.info(f'Refined lines {lines_number}')
         
         else:
             logging.info('Not found changes')
-            InsertLog(2,TableName,'Complete',0)
+            InsertLog(3,TableName,'Complete',0)
 
     except Exception as e:
         logging.error(f'Error to refinement data: {e}')
-        InsertLog(2,TableName,'Error',0,e)
+        InsertLog(3,TableName,'Error',0,e)
         raise TypeError(e)
     
     finally:
