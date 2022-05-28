@@ -143,29 +143,30 @@ def LoadStartSchema():
         ## ----- ## -----## ----- ## -----## ----- ## -----
         # ## Fat Movies
 
-        logging.info('Creating Fat Movies')
-        InsertLog(4,'FatMovies','InProgress')
+        logging.info('Creating Fat Film')
+        InsertLog(4,'FatFilm','InProgress')
 
         df_fat = pd.merge(df ,df_torrent ,how='inner' , on=torrent_columns[:7]).drop(torrent_columns ,axis=1)
         df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:1]).drop(genres_columns ,axis=1)
         df_fat = pd.merge(df_fat ,df_movie ,how='inner' ,on=movie_columns[1:10]).drop(movie_columns ,axis=1)
+        df_fat = df_fat.drop_duplicates()
         df_fat['created_at'] = pd.to_datetime(dt_now)
         df_fat['updated_at'] = pd.to_datetime(dt_now)
         df_fat['loaded_at'] = pd.to_datetime(dt_now)
         df_fat['loaded_by'] = user
         df_fat = df_fat[['movie_id', 'torrent_id', 'genre_id', 'created_at', 'updated_at', 'extraction_at', 'extraction_by', 'loaded_at','loaded_by']]
 
-        df_fat.to_sql('FatMovies',dbcon_write,if_exists='replace',index=False)
+        df_fat.to_sql('FatFilm',dbcon_write,if_exists='replace',index=False)
 
         lines = len(df_fat.index)
-        InsertLog(4,'FatMovies','Complete',lines)
+        InsertLog(4,'FatFilm','Complete',lines)
 
-        logging.info(f'Insert lines in Fat Movies { lines }')
-        logging.info('Completed creation Fat Movies')
+        logging.info(f'Insert lines in Fat Film { lines }')
+        logging.info('Completed creation Fat Film')
         
     except Exception as e:
         logging.error(f'Error to load start schema: {e}')
-        InsertLog(4,'FatMovies','Error',0,e)
+        InsertLog(4,'FatFilm','Error',0,e)
         raise TypeError(e)
     
     finally:
