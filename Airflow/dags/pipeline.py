@@ -4,7 +4,7 @@ from airflow.operators.python import PythonOperator
 from ETL.create_database import createDB  
 from ETL.extract import ExtractData 
 from ETL.refined import DataRefinement
-from ETL.load import LoadStartSchema
+from ETL.load import *
 
 default_args={
         'depends_on_past': False,
@@ -14,17 +14,6 @@ default_args={
         'retries': 1,
         'retry_delay': datetime.timedelta(minutes=5),
         'execution_timeout': datetime.timedelta(seconds=300)
-        # 'queue': 'bash_queue',
-        # 'pool': 'backfill',
-        # 'priority_weight': 10,
-        # 'end_date': datetime(2016, 1, 1),
-        # 'wait_for_downstream': False,
-        # 'sla': timedelta(hours=2),
-        # 'on_failure_callback': some_function,
-        # 'on_success_callback': some_other_function,
-        # 'on_retry_callback': another_function,
-        # 'sla_miss_callback': yet_another_function,
-        # 'trigger_rule': 'all_success'
     }
 
 with DAG(
@@ -59,5 +48,6 @@ with DAG(
         task_id = 'load_data',
         python_callable=LoadStartSchema,
     )
+
 
     create_database >> extract >> refined >> load

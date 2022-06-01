@@ -40,7 +40,7 @@ def InsertLog(process_id, table, status, row_count = 0, error=None):
         elif status == 'Complete':
 
             df_log = pd.read_sql(log_table,dbconn)
-            df_log = df_log.loc[df_log['log_id'] == df_log['log_id'].max()]
+            df_log = df_log[df_log['table_name'] == table].sort_values(by=['log_id'], ascending=False).head(1)
             df_log['complete_date'] = datetime.now()
             df_log['row_count'] = row_count
             df_log['status'] = status
@@ -50,7 +50,7 @@ def InsertLog(process_id, table, status, row_count = 0, error=None):
         else:
 
             df_log = pd.read_sql(log_table,dbconn)
-            df_log = df_log.loc[df_log['log_id'] == df_log['log_id'].max()]
+            df_log = df_log[df_log['table_name'] == table].sort_values(by=['log_id'], ascending=False).head(1)
             df_log['complete_date'] = datetime.now()
             df_log['row_count'] = row_count
             df_log['status'] = status

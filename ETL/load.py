@@ -12,9 +12,8 @@ import logging
 # ## Inicial Config
 log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
-def LoadStartSchema():
 
-    logging.info('Starting process load star schema')
+def createDimTorrent():
 
     dt_now = datetime.datetime.now(pytz.timezone('UTC'))
     user = f'{getpass.getuser()}@{socket.gethostname()}'
@@ -33,7 +32,6 @@ def LoadStartSchema():
     dbcon_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
 
     try:
-        
         df = pd.read_sql_table('yts_movies',dbcon_read).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
 
         ## ----- ## -----## ----- ## -----## ----- ## -----
@@ -41,7 +39,6 @@ def LoadStartSchema():
         logging.info('Creating Dim Torrent')
 
         InsertLog(4,'DimTorrent','InProgress')
-
 
         torrent_columns = ["url_torrent","size","size_bytes"
                         ,"type","quality","language"
@@ -69,7 +66,27 @@ def LoadStartSchema():
         InsertLog(4,'DimTorrent','Error',0,e)
         raise TypeError(e)
 
+def createDimGenres():
+
+    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+    user = f'{getpass.getuser()}@{socket.gethostname()}'
+
+    config = ConfigParser()
+    config.read('ETL/Connections/credencials.ini')
+
+    HOST=config['MySql']['host']
+    USER=config['MySql']['user']
+    PASSWORD=config['MySql']['pass']
+    PORT=3306
+    DB_READ='silver'
+    DB_WRITE='gold'
+
+    dbcon_read = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
+    dbcon_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
+
     try:
+        df = pd.read_sql_table('yts_movies',dbcon_read).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
+
         ## ----- ## -----## ----- ## -----## ----- ## -----
         # ## Dim Genres
 
@@ -102,7 +119,26 @@ def LoadStartSchema():
         InsertLog(4,'DimGenres','Error',0,e)
         raise TypeError(e)
 
+def createDimMovie():
+
+    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+    user = f'{getpass.getuser()}@{socket.gethostname()}'
+
+    config = ConfigParser()
+    config.read('ETL/Connections/credencials.ini')
+
+    HOST=config['MySql']['host']
+    USER=config['MySql']['user']
+    PASSWORD=config['MySql']['pass']
+    PORT=3306
+    DB_READ='silver'
+    DB_WRITE='gold'
+
+    dbcon_read = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
+    dbcon_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
+
     try:
+        df = pd.read_sql_table('yts_movies',dbcon_read).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
         ## ----- ## -----## ----- ## -----## ----- ## -----
         # ## Dim Movie
 
@@ -139,10 +175,44 @@ def LoadStartSchema():
         InsertLog(4,'DimMovie','Error',0,e)
         raise TypeError(e)
 
-    try:
-        ## ----- ## -----## ----- ## -----## ----- ## -----
-        # ## Fat Movies
+def createFatFilms():
 
+    ## ----- ## -----## ----- ## -----## ----- ## -----
+    # ## Fat Movies
+
+    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+    user = f'{getpass.getuser()}@{socket.gethostname()}'
+
+    config = ConfigParser()
+    config.read('ETL/Connections/credencials.ini')
+
+    HOST=config['MySql']['host']
+    USER=config['MySql']['user']
+    PASSWORD=config['MySql']['pass']
+    PORT=3306
+    DB_READ='silver'
+    DB_WRITE='gold'
+
+    dbcon_read = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
+    dbcon_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
+
+    movie_columns = ['id','url_yts', 'title', 'summary', 'banner_image',"imdb_code",	"year",	"rating"
+                        ,"runtime" ,"yt_trailer_code",'uploaded_content_at','updated_at','loaded_at','loaded_by']
+
+    genres_columns = ["genres",'created_at'
+                        ,'updated_at','loaded_at','loaded_by']
+
+    torrent_columns = ["url_torrent","size","size_bytes"
+                        ,"type","quality","language"
+                        ,"uploaded_torrent_at",'created_at','updated_at'
+                        ,'loaded_at','loaded_by']
+    try:
+
+        df = pd.read_sql_table('yts_movies',dbcon_read).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
+        df_torrent = pd.read_sql_table('DimTorrent',dbcon_write)
+        df_genres = pd.read_sql_table('DimGenres',dbcon_write)
+        df_movie = pd.read_sql_table('DimMovie',dbcon_write)
+        
         logging.info('Creating Fat Film')
         InsertLog(4,'FatFilm','InProgress')
 
@@ -168,7 +238,15 @@ def LoadStartSchema():
         logging.error(f'Error to load start schema: {e}')
         InsertLog(4,'FatFilm','Error',0,e)
         raise TypeError(e)
-    
-    finally:
-        logging.info('Completed process load start schema')
-        
+
+
+def LoadStartSchema():
+
+    logging.info('Starting process load star schema')
+
+    createDimTorrent()
+    createDimGenres()
+    createDimMovie()
+    createFatFilms()
+
+    logging.info('Completed process load start schema')

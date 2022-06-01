@@ -35,17 +35,17 @@ def createDB():
                     
             dbconn.commit()
             
-        InsertLog(1,None,'InProgress')
+        InsertLog(1,'N/D','InProgress')
 
     except Exception as e:
         cursor.close()
         dbconn.close()
         logging.error(f'Error on create databases: {e}')
-        InsertLog(1,None,'Error',0,e)
+        InsertLog(1,'N/D','Error',0,e)
         raise TypeError(e)
     finally:
         logging.info('Complete creation of databases')
     
     cursor.close()
     dbconn.close()
-    InsertLog(1,None,'Complete')
+    InsertLog(1,'N/D','Complete')
