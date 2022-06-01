@@ -24,8 +24,7 @@ CREATE TABLE IF NOT EXISTS etl_logging (
 
 USE bronze;
 CREATE TABLE IF NOT EXISTS yts_movies (
-    movie_sk bigint AUTO_INCREMENT PRIMARY KEY,
-    id bigint DEFAULT NULL,
+    id bigint PRIMARY KEY,
     url text,
     imdb_code text,
     title text,
@@ -59,7 +58,7 @@ CREATE TABLE IF NOT EXISTS yts_movies (
 USE silver;
 CREATE TABLE IF NOT EXISTS yts_movies (
     movie_sk bigint AUTO_INCREMENT PRIMARY KEY,
-    id bigint DEFAULT NULL,
+    id bigint,
     url_yts text,
     imdb_code text,
     title text,

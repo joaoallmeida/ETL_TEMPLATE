@@ -36,7 +36,7 @@ def DataRefinement(TableName):
     drop_columns = ['title_english','title_long','slug','description_full','peers',
                     'synopsis','mpa_rating','background_image','seeds','url_tt',
                     'background_image_original','small_cover_image','date_uploaded_unix_tt',
-                    'state','date_uploaded_unix','medium_cover_image','hash','movie_sk']
+                    'state','date_uploaded_unix','medium_cover_image','hash']
 
     rename_columns = {
         "url":"url_yts",
