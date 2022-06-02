@@ -37,8 +37,6 @@ def ExtractData(TableName):
         dbconn = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB)
         
         df = getResponseData()
-        df = convertToJson(df,['genres','torrents'])
-
         df['extraction_at'] = pd.to_datetime(dt_now)
         df['extraction_by'] = user
         

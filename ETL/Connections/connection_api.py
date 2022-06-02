@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+from ..Functions.utils_functions import *
 
 def getResponseData():
     
@@ -16,7 +17,8 @@ def getResponseData():
         
         data = [d for m in movies_list for d in m]
         df = pd.DataFrame(data)
-
+        df = convertToJson(df,['genres','torrents'])
+        
         return df
 
     except requests.exceptions.RequestException as e:

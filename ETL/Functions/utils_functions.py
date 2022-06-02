@@ -25,7 +25,6 @@ def truncateTable(table,dbconn):
     finally:
         logging.info('Complete Truncate table')
 
-
 def getTorrentValue(df):
     torrent_list = list()
 
@@ -102,7 +101,18 @@ def getChanges(df,table,dbconn):
 
 def splitGenreColumn(df):
     
-    df[["genre_0","genre_1","genre_2","genre_3"]] = df['genres'].str[1:-1].str.replace('"','').str.upper().str.split(',',expand=True)
-    df = df.drop(['genres'], axis=1)
+    df['genres'] = df['genres'].apply(lambda x: json.loads(x))
+    data = df[df['genres'].notna()][['id','genres']].to_dict()
+    
+    df_aux = pd.DataFrame(data['genres'].values(),index=data['id'].values()).add_prefix('genre_').reset_index()
+    df = df.merge(df_aux, left_on='id', right_on='index',how='left')
+    df = df.drop(['genres','index'],axis=1)
 
+    return df
+
+def upperString(df,columns):
+
+    for col in columns:
+        df[col] = df[col].str.upper()
+        
     return df

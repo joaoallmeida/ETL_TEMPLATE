@@ -33,6 +33,8 @@ def DataRefinement(TableName):
     DB_WRITE='silver'
 
 
+    upper_columns = ['title','language','type','genre_0', 'genre_1', 'genre_2', 'genre_3']
+    
     drop_columns = ['title_english','title_long','slug','description_full','peers',
                     'synopsis','mpa_rating','background_image','seeds','url_tt',
                     'background_image_original','small_cover_image','date_uploaded_unix_tt',
@@ -53,15 +55,13 @@ def DataRefinement(TableName):
 
         df = pd.read_sql_table(TableName,conn_read)
 
-        df = getTorrentValue(df)
         df = splitGenreColumn(df)
+        df = getTorrentValue(df)
+        df = upperString(df, upper_columns)
         df = df.drop(drop_columns,axis=1)
         df = df.drop_duplicates().reset_index(drop=True)
         df = df.rename(rename_columns,axis=1)
 
-        df['title'] = df['title'].str.upper()
-        df['language'] = df['language'].str.upper()
-        df['type'] = df['type'].str.upper()
         df['uploaded_torrent_at'] = pd.to_datetime(df['uploaded_torrent_at'],errors='coerce')
         df['uploaded_content_at'] = pd.to_datetime(df['uploaded_content_at'],errors='coerce')
         df['loaded_at'] = pd.to_datetime(dt_now)
@@ -70,7 +70,7 @@ def DataRefinement(TableName):
 
         logging.info('Loading refined table in MySQL')
 
-        df.to_sql(TableName,conn_write, if_exists='replace',index=False)
+        df.to_sql(TableName, conn_write, if_exists='append',index=False)
 
         logging.info('Completed load refined table in MySQL.')
 
