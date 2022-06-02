@@ -65,7 +65,6 @@ CREATE TABLE IF NOT EXISTS yts_movies (
     year bigint DEFAULT NULL,
     rating double DEFAULT NULL,
     runtime bigint DEFAULT NULL,
-    genres text,
     summary text,
     yt_trailer_code text,
     language text,
@@ -79,6 +78,10 @@ CREATE TABLE IF NOT EXISTS yts_movies (
     size_bytes bigint DEFAULT NULL,
     uploaded_torrent_at datetime DEFAULT NULL,
     url_torrent text,
+    genre_0 text,
+    genre_1 text,
+    genre_2 text,
+    genre_3 text,
     loaded_at timestamp NULL DEFAULT NULL,
     loaded_by text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

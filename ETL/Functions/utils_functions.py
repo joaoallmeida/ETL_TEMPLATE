@@ -99,3 +99,10 @@ def getChanges(df,table,dbconn):
         raise TypeError(e)
     
     return insert
+
+def splitGenreColumn(df):
+    
+    df[["genre_0","genre_1","genre_2","genre_3"]] = df['genres'].str[1:-1].str.replace('"','').str.upper().str.split(',',expand=True)
+    df = df.drop(['genres'], axis=1)
+
+    return df

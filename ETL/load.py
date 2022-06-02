@@ -42,8 +42,7 @@ def createDimTorrent():
 
         torrent_columns = ["url_torrent","size","size_bytes"
                         ,"type","quality","language"
-                        ,"uploaded_torrent_at",'created_at','updated_at'
-                        ,'loaded_at','loaded_by']
+                        ,"uploaded_torrent_at"]
 
         df_torrent = df.copy()
         df_torrent = df_torrent[torrent_columns[:7]]
@@ -94,11 +93,10 @@ def createDimGenres():
 
         InsertLog(4,'DimGenres','InProgress')
 
-        genres_columns = ["genres",'created_at'
-                        ,'updated_at','loaded_at','loaded_by']
+        genres_columns = ["genre_0","genre_1","genre_2","genre_3"]
 
         df_genres = df.copy()
-        df_genres = df_genres[genres_columns[:1]]
+        df_genres = df_genres[genres_columns]
         df_genres = df_genres.drop_duplicates().reset_index(drop=True)
         df_genres['created_at'] = pd.to_datetime(dt_now)
         df_genres['updated_at'] = pd.to_datetime(dt_now)
@@ -147,7 +145,7 @@ def createDimMovie():
         InsertLog(4,'DimMovie','InProgress')
 
         movie_columns = ['id','url_yts', 'title', 'summary', 'banner_image',"imdb_code",	"year",	"rating"
-                        ,"runtime" ,"yt_trailer_code",'uploaded_content_at','updated_at','loaded_at','loaded_by']
+                        ,"runtime" ,"yt_trailer_code",'uploaded_content_at']
 
         movie_rename = {
                     'id':'movie_id'
@@ -199,8 +197,7 @@ def createFatFilms():
     movie_columns = ['id','url_yts', 'title', 'summary', 'banner_image',"imdb_code",	"year",	"rating"
                         ,"runtime" ,"yt_trailer_code",'uploaded_content_at','updated_at','loaded_at','loaded_by']
 
-    genres_columns = ["genres",'created_at'
-                        ,'updated_at','loaded_at','loaded_by']
+    genres_columns = ["genre_0","genre_1","genre_2","genre_3",'created_at','updated_at','loaded_at','loaded_by']
 
     torrent_columns = ["url_torrent","size","size_bytes"
                         ,"type","quality","language"
@@ -217,7 +214,7 @@ def createFatFilms():
         InsertLog(4,'FatFilm','InProgress')
 
         df_fat = pd.merge(df ,df_torrent ,how='inner' , on=torrent_columns[:7]).drop(torrent_columns ,axis=1)
-        df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:1]).drop(genres_columns ,axis=1)
+        df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:4]).drop(genres_columns ,axis=1)
         df_fat = pd.merge(df_fat ,df_movie ,how='inner' ,on=movie_columns[1:10]).drop(movie_columns ,axis=1)
         df_fat = df_fat.drop_duplicates()
         df_fat['created_at'] = pd.to_datetime(dt_now)
