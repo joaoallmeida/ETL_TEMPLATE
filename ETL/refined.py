@@ -52,38 +52,33 @@ def DataRefinement(TableName):
         dbconn = mysqlconnection(HOST,USER,PASSWORD,PORT,DB_WRITE)
 
         df = pd.read_sql_table(TableName,conn_read)
-        df = getChanges(df,TableName,conn_write)
 
-        if len(df.index) > 0 :
+        df = getTorrentValue(df)
+        df = splitGenreColumn(df)
+        df = df.drop(drop_columns,axis=1)
+        df = df.drop_duplicates().reset_index(drop=True)
+        df = df.rename(rename_columns,axis=1)
 
-            df = getTorrentValue(df)
-            df = df.drop(drop_columns,axis=1)
-            df = df.drop_duplicates().reset_index(drop=True)
-            df = df.rename(rename_columns,axis=1)
-            df = splitGenreColumn(df)
+        df['title'] = df['title'].str.upper()
+        df['language'] = df['language'].str.upper()
+        df['type'] = df['type'].str.upper()
+        df['uploaded_torrent_at'] = pd.to_datetime(df['uploaded_torrent_at'],errors='coerce')
+        df['uploaded_content_at'] = pd.to_datetime(df['uploaded_content_at'],errors='coerce')
+        df['loaded_at'] = pd.to_datetime(dt_now)
+        df['loaded_by'] = user
+        df.insert(0,'movie_sk',(df.index+1))
 
-            df['title'] = df['title'].str.upper()
-            df['language'] = df['language'].str.upper()
-            df['type'] = df['type'].str.upper()
-            df['uploaded_torrent_at'] = pd.to_datetime(df['uploaded_torrent_at'],errors='coerce')
-            df['uploaded_content_at'] = pd.to_datetime(df['uploaded_content_at'],errors='coerce')
-            df['loaded_at'] = pd.to_datetime(dt_now)
-            df['loaded_by'] = user
+        logging.info('Loading refined table in MySQL')
 
-            logging.info('Starting incremental load')
+        df.to_sql(TableName,conn_write, if_exists='replace',index=False)
 
-            df.to_sql(TableName,conn_write, if_exists='append',index=False)
+        logging.info('Completed load refined table in MySQL.')
 
-            logging.info('Complete incremental load')
-
-            lines_number = len(df.index)
-            InsertLog(3,TableName,'Complete',lines_number)
-            
-            logging.info(f'Refined lines {lines_number}')
+        lines_number = len(df.index)
+        InsertLog(3,TableName,'Complete',lines_number)
         
-        else:
-            logging.info('Not found changes')
-            InsertLog(3,TableName,'Complete',0)
+        logging.info(f'Refined lines {lines_number}')
+        
 
     except Exception as e:
         logging.error(f'Error to refinement data: {e}')
