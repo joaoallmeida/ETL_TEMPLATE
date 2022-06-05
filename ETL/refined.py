@@ -70,7 +70,7 @@ def DataRefinement(TableName):
 
         logging.info('Loading refined table in MySQL')
 
-        df.to_sql(TableName, conn_write, if_exists='append',index=False)
+        df.to_sql(TableName, conn_write, if_exists='replace',index=False)
 
         logging.info('Completed load refined table in MySQL.')
 
