@@ -5,9 +5,9 @@ This ETL is a sample of my coding work with python using *Apache Airflow* for pi
 This process uses the **YTS Movies API**, a public API for developers, as data sources.<br>
 For more information about this API [click here](https://yts.torrentbay.to/api).
 
-### This is the pipeline workflow:
-![](Docs/Screenshot/diagram_pipeline.png)
+# Pipeline workflow
 
+![](Docs/Screenshot/pipeline_diagram.png)
 
 # Step-By-Step
 1. The first step in this process is to create the database, tables and insert values to process the table.
@@ -38,4 +38,4 @@ For more information about this API [click here](https://yts.torrentbay.to/api).
 # Apache Airflow
 This is what the airflow dag looks like:
 
-![](Docs/Screenshot/airflow-pipeline.jpeg)
+![](Docs/Screenshot/airflow_pipeline.jpeg)
