@@ -8,6 +8,16 @@ For more information about this API [click here](https://yts.torrentbay.to/api).
 ### This is the pipeline workflow:
 ![](Docs/Screenshot/diagram_pipeline.png)
 
+
+# Step-By-Step
+1. The first step in this process is to create the database, tables and insert values to process the table.
+
+2. The second step is to extract the data from the api and store it in MySql in the bronze database.
+
+3. The third step is data refinement and storage in silver database in MySql
+
+4. The last step is to load the data and create the star schema model and store the data in the gold database in MySql
+
 ---
 # Techniques and Tools 🛠️
 
