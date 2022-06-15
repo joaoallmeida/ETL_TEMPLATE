@@ -10,7 +10,7 @@ For more information about this API [click here](https://yts.torrentbay.to/api).
 ![](Docs/Screenshot/pipeline_diagram.png)
 
 # Step-By-Step
-1. The first step in this process is to create the database, tables and insert values to process the table.
+1. The first step in this process is to create the database and tables.
 
 2. The second step is to extract the data from the api and store it in MySql in the bronze database.
 
