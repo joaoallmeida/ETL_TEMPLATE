@@ -1,5 +1,6 @@
 from ETL.Connections.db_connection import engineSqlAlchemy
 from ETL.Functions.etl_monitor import InsertLog
+from ETL.Functions.utils_functions import *
 from airflow.hooks.base import BaseHook
 import pandas as pd
 import datetime
@@ -91,8 +92,10 @@ def createDimGenres():
         genres_columns = ["genre_0","genre_1","genre_2","genre_3"]
 
         df_genres = df.copy()
+        df_genres = splitGenreColumn(df)
         df_genres = df_genres[genres_columns]
         df_genres = df_genres.drop_duplicates().reset_index(drop=True)
+        df_genres = upperString(df_genres, genres_columns)
         df_genres['created_at'] = pd.to_datetime(dt_now)
         df_genres['updated_at'] = pd.to_datetime(dt_now)
         df_genres['loaded_at'] = pd.to_datetime(dt_now)
@@ -204,6 +207,8 @@ def createFatFilms():
         logging.info('Creating Fat Film')
         InsertLog(4,'FatFilm','InProgress')
 
+        df = splitGenreColumn(df)
+        df = upperString(df,genres_columns[:4])
         df_fat = pd.merge(df ,df_torrent ,how='inner' , on=torrent_columns[:7]).drop(torrent_columns ,axis=1)
         df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:4]).drop(genres_columns ,axis=1)
         df_fat = pd.merge(df_fat ,df_movie ,how='inner' ,on=movie_columns[1:10]).drop(movie_columns ,axis=1)
