@@ -1,12 +1,11 @@
 # ETL Yts Movies 📽️
-## Introducion 📑
+# Introduction 📑
 This ETL is a sample of my coding work with python using *Apache Airflow* for pipeline orchestration, *Pandas* for data manipulation, *MySql* as storage and *Apache Superset* for data visualization.
 
 This process uses the **YTS Movies API**, a public API for developers, as data sources.<br>
 For more information about this API [click here](https://yts.torrentbay.to/api).
 
 # Pipeline workflow
-
 ![](Docs/Screenshot/pipeline_diagram.png)
 
 # Step-By-Step
