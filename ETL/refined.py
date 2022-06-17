@@ -63,7 +63,6 @@ def DataRefinement(TableName):
             df['uploaded_content_at'] = pd.to_datetime(df['uploaded_content_at'],errors='coerce')
             df['loaded_at'] = pd.to_datetime(dt_now)
             df['loaded_by'] = user
-            df.insert(0,'movie_sk',(df.index+1))
 
             logging.info('Loading refined table in MySQL')
 
