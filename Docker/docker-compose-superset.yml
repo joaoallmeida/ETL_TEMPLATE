@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+
+  superset-init:
+    image: apache/superset:latest
+    container_name: superset-init
+    command: ["/app/superset_init/init.sh"]
+    user: "root"
+    volumes:
+      - /Script/:/app/superset_init
+      
+  superset:
+    image: apache/superset:latest
+    container_name: superset
+    ports:
+      - 8088:8088
+    user: "root"
+    volumes:
+      - superset_home:/app/superset_home
+      
+volumes:
+  superset_home:
+    external: false

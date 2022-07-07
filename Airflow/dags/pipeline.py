@@ -8,17 +8,15 @@ from ETL.load import *
 
 default_args={
         'depends_on_past': False,
-        'email': ['airflow@example.com'],
-        'email_on_failure': False,
-        'email_on_retry': False,
         'retries': 1,
         'retry_delay': datetime.timedelta(minutes=5),
         'execution_timeout': datetime.timedelta(seconds=300)
     }
 
 with DAG(
-    "orchestrator",
+    "Orchestrator",
     start_date=datetime.datetime(2022,1,1),
+    description='A sample orchestrator for ETL process.',
     default_args= default_args,
     schedule_interval="@daily",
     catchup=False
