@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-from ..Functions.utils_functions import *
+from functions.utilsFunctions import *
 
 def getResponseData():
     

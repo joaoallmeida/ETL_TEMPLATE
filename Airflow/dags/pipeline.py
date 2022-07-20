@@ -1,50 +1,45 @@
 import datetime
 from airflow import DAG
-from airflow.operators.python import PythonOperator
-from ETL.create_database import createDB  
-from ETL.extract import ExtractData 
-from ETL.refined import DataRefinement
-from ETL.load import *
+from airflow.operators.etl_plugin import runSql,extractRawData,refinedData,starSchemaModel
 
 default_args={
+        'start_date': datetime.datetime(2022,1,1),
         'depends_on_past': False,
         'retries': 1,
         'retry_delay': datetime.timedelta(minutes=5),
-        'execution_timeout': datetime.timedelta(seconds=300)
+        'execution_timeout': datetime.timedelta(seconds=300),
+        'catchup': False
     }
 
 with DAG(
-    "Orchestrator",
-    start_date=datetime.datetime(2022,1,1),
+    dag_id="Orchestrator",
     description='A sample orchestrator for ETL process.',
     default_args= default_args,
-    schedule_interval="@daily",
-    catchup=False
+    schedule_interval="@daily"
 ) as dag:
 
 
-    create_database = PythonOperator(
-        task_id = 'create_database',
-        python_callable=createDB
+    create_database = runSql(
+        task_id = 'create_database_and_tables'
+        # python_callable=createDB
     )
-    
 
-    extract = PythonOperator(
+    extract = extractRawData(
         task_id = 'extract_data',
-        python_callable=ExtractData,
-        op_args={"yts_movies":"TableName"},
-        dag=dag
+        # python_callable=ExtractData,
+        tableName="yts_movies"
+        # dag=dag
     )
 
-    refined = PythonOperator(
+    refined = refinedData(
         task_id = 'refined_data',
-        python_callable=DataRefinement,
-        op_args={"yts_movies":"TableName"},
+        # python_callable=DataRefinement,
+        tableName="yts_movies"
     )
 
-    load = PythonOperator(
-        task_id = 'load_data',
-        python_callable=LoadStartSchema,
+    load = starSchemaModel(
+        task_id = 'load_data'
+        # python_callable=LoadStartSchema,
     )
 
 

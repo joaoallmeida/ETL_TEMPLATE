@@ -25,7 +25,6 @@ def truncateTable(table,dbconn):
     finally:
         logging.info('Complete Truncate table')
 
-
 def getTorrentValue(df):
     torrent_list = list()
 
