@@ -14,7 +14,7 @@ import getpass
 
 
 # ## Inicial Config
-log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
+# log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
 class extractRawData(BaseOperator) :
 

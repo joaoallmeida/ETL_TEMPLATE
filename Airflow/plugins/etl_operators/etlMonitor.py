@@ -1,13 +1,14 @@
-
-from dbConnection import stringConnections
-from utilsFunctions import utils
 from airflow.hooks.base import BaseHook
 from datetime import datetime
 import pandas as pd
 
+import dbConnection
+import utilsFunctions
+
 class control:
 
-    def __init__(self):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
 
         conn = BaseHook.get_connection('MySql Localhost')
         self.host = conn.host
@@ -15,12 +16,11 @@ class control:
         self.password = conn.password
         self.port = 3306
         self.db = 'monitoring'
-        self.ut = utils()
+        self.ut = utilsFunctions.utils()
+        connections = dbConnection.stringConnections()
 
-        connections = stringConnections()
-
-        self.dbConn = connections.engineSqlAlchemy(self.host,self.user,self.password,self.port,self.db)
-        self.mySqlConn = connections.mysqlconnection(self.host,self.user,self.password,self.port,self.db)
+        self.dbConn = connections.engineSqlAlchemy(self.user,self.password,self.port,self.db)
+        self.mySqlConn = connections.mysqlconnection(self.user,self.password,self.port,self.db)
 
     def InsertLog(self, process_id, table, status, row_count = 0, error=None):
 

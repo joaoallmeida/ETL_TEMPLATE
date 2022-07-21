@@ -1,10 +1,10 @@
 from __future__ import division, absolute_import, print_function
 from airflow.plugins_manager import AirflowPlugin
 
-from operators.create import runSql
-from operators.extract import extractRawData 
-from operators.refined import refinedData 
-from operators.load import starSchemaModel 
+from etl_operators.create import runSql
+from etl_operators.extract import extractRawData 
+from etl_operators.refined import refinedData 
+from etl_operators.load import starSchemaModel 
 
 class EtlPlugin(AirflowPlugin):
 

@@ -1,5 +1,4 @@
 import datetime
-from ssl import create_default_context
 from airflow import DAG
 from airflow.operators.etl_plugin import runSql,extractRawData,refinedData,starSchemaModel
 
