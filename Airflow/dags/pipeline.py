@@ -1,4 +1,5 @@
 import datetime
+from ssl import create_default_context
 from airflow import DAG
 from airflow.operators.etl_plugin import runSql,extractRawData,refinedData,starSchemaModel
 
@@ -19,28 +20,37 @@ with DAG(
 ) as dag:
 
 
-    create_database = runSql(
+    create = runSql(
         task_id = 'create_database_and_tables'
-        # python_callable=createDB
     )
 
     extract = extractRawData(
         task_id = 'extract_data',
-        # python_callable=ExtractData,
         tableName="yts_movies"
         # dag=dag
     )
 
     refined = refinedData(
         task_id = 'refined_data',
-        # python_callable=DataRefinement,
         tableName="yts_movies"
     )
 
-    load = starSchemaModel(
-        task_id = 'load_data'
-        # python_callable=LoadStartSchema,
+    loadDimTorrent = starSchemaModel(
+        task_id = 'load_dim_torrent',
+        tableId = 'DimTorrent'
+    )
+    loadDimGenres = starSchemaModel(
+        task_id = 'load_dim_genres',
+        tableId = 'DimGenres'
+    )
+    loadDimMovie = starSchemaModel(
+        task_id = 'load_dim_movie',
+        tableId = 'DimMovie'
+    )
+    loadFatFilms= starSchemaModel(
+        task_id = 'load_fat_films',
+        tableId = 'FatFilms'
     )
 
 
-    create_database >> extract >> refined >> load
+    create >> extract >> refined >> [loadDimTorrent >> loadDimGenres >> loadDimMovie] >> loadFatFilms

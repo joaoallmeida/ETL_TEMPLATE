@@ -1,6 +1,6 @@
-from connections.dbConnection import stringConnections
-from functions.utilsFunctions import *
-from functions.etlMonitor import control
+from dbConnection import stringConnections
+from utilsFunctions import utils
+from etlMonitor import control
 from airflow.hooks.base import BaseHook
 from airflow.models import BaseOperator
 
@@ -28,6 +28,7 @@ class refinedData(BaseOperator):
         self.dbWrite ='silver'
         self.tableName = tableName
         self.etlMonitor = control()
+        self.ut = utils()
         db_connections = stringConnections()
 
         self.dbConnRead = db_connections.engineSqlAlchemy(self.host,self.user,self.password,self.port,self.dbRead)
@@ -59,11 +60,11 @@ class refinedData(BaseOperator):
         try:
 
             df = pd.read_sql_table(self.tableName, self.dbConnRead)
-            df = getChanges(df, self.tableName, self.dbConnWrite)
+            df = self.ut.getChanges(df, self.tableName, self.dbConnWrite)
 
             if len(df.index) > 0:
                 
-                df = getTorrentValue(df)
+                df = self.ut.getTorrentValue(df)
                 df = df.drop(drop_columns,axis=1)
                 df = df.drop_duplicates().reset_index(drop=True)
                 df = df.rename(rename_columns,axis=1)
@@ -75,7 +76,7 @@ class refinedData(BaseOperator):
 
                 logging.info('Loading refined table in MySQL')
 
-                InsertToMySQL(df ,self.dbConn ,self.tableName)
+                self.ut.InsertToMySQL(df ,self.dbConn ,self.tableName)
 
                 logging.info('Completed load refined table in MySQL.')
 

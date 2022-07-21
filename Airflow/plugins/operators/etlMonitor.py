@@ -1,6 +1,6 @@
 
-from connections.dbConnection import stringConnections
-from functions.utilsFunctions import InsertToMySQL
+from dbConnection import stringConnections
+from utilsFunctions import utils
 from airflow.hooks.base import BaseHook
 from datetime import datetime
 import pandas as pd
@@ -15,6 +15,7 @@ class control:
         self.password = conn.password
         self.port = 3306
         self.db = 'monitoring'
+        self.ut = utils()
 
         connections = stringConnections()
 
@@ -48,7 +49,7 @@ class control:
                 df_log['row_count'] = row_count
                 df_log['status'] = status
 
-                InsertToMySQL(df_log, self.mySqlConn, log_table)
+                self.ut.InsertToMySQL(df_log, self.mySqlConn, log_table)
 
             else:
 
@@ -59,7 +60,7 @@ class control:
                 df_log['status'] = status
                 df_log['error_message'] = error
 
-                InsertToMySQL(df_log, self.mySqlConn, log_table)
+                self.ut.InsertToMySQL(df_log, self.mySqlConn, log_table)
             
         except Exception as e:
             raise e

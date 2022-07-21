@@ -1,7 +1,7 @@
-from connections.connectionApi import getResponseData
-from connections.dbConnection import stringConnections
-from functions.etlMonitor import control
-from functions.utilsFunctions import *
+from connectionApi import sourceApi
+from dbConnection import stringConnections
+from etlMonitor import control
+from utilsFunctions import utils
 from airflow.hooks.base import BaseHook
 from airflow.models import BaseOperator
 
@@ -29,6 +29,8 @@ class extractRawData(BaseOperator) :
         self.db ='bronze'
         self.tableName = tableName
         self.etlMonitor = control()
+        self.ut = utils()
+        self.source = sourceApi()
         db_connections = stringConnections()
 
         # Creating SqlAlchemy engine and MySql Connection for connect to database. 
@@ -47,15 +49,15 @@ class extractRawData(BaseOperator) :
         
         try:
             
-            df = getResponseData()
+            df = self.source.getResponseData()
             df['extraction_at'] = pd.to_datetime(dt_now)
             df['extraction_by'] = user
             
             logging.info('Get load data')
-            df = getChanges(df,self.tableName, self.dbConn)
+            df = self.ut.getChanges(df,self.tableName, self.dbConn)
             
             logging.info('Start Incremental Load')
-            InsertToMySQL(df,self.mySqlConn,self.tableName)
+            self.ut.InsertToMySQL(df,self.mySqlConn,self.tableName)
             logging.info('Complete Incremental Load')
 
             lines = len(df.index)

@@ -1,9 +1,8 @@
 from airflow.hooks.base import BaseHook
 from airflow.models import BaseOperator
-from connections.dbConnection import stringConnections
-from functions.etlMonitor import control
-from functions.utilsFunctions import *
-
+from dbConnection import stringConnections
+from etlMonitor import control
+from utilsFunctions import utils
 import pandas as pd
 import datetime
 import pytz
@@ -16,7 +15,7 @@ log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(level
 
 class starSchemaModel(BaseOperator):
     
-    def __init__(self,**kwargs):
+    def __init__(self,tableId,**kwargs):
 
         super().__init__(**kwargs)
         conn = BaseHook.get_connection('MySql Localhost')
@@ -26,7 +25,9 @@ class starSchemaModel(BaseOperator):
         self.port = 3306
         self.dbRead ='silver'
         self.dbWrite ='gold'
+        self.tableId = tableId
         self.etlMonitor = control()
+        self.ut = utils()
         db_connections = stringConnections()
 
         self.dbConnRead = db_connections.engineSqlAlchemy(self.host,self.user,self.password,self.port,self.dbRead)
@@ -89,10 +90,10 @@ class starSchemaModel(BaseOperator):
             genres_columns = ["genre_0","genre_1","genre_2","genre_3"]
 
             df_genres = df.copy()
-            df_genres = splitGenreColumn(df)
+            df_genres = self.ut.splitGenreColumn(df)
             df_genres = df_genres[genres_columns]
             df_genres = df_genres.drop_duplicates().reset_index(drop=True)
-            df_genres = upperString(df_genres, genres_columns)
+            df_genres = self.ut.upperString(df_genres, genres_columns)
             df_genres['created_at'] = pd.to_datetime(dt_now)
             df_genres['updated_at'] = pd.to_datetime(dt_now)
             df_genres['loaded_at'] = pd.to_datetime(dt_now)
@@ -183,8 +184,8 @@ class starSchemaModel(BaseOperator):
             logging.info('Creating Fat Film')
             self.etlMonitor.InsertLog(4,'FatFilm','InProgress')
 
-            df = splitGenreColumn(df)
-            df = upperString(df,genres_columns[:4])
+            df = self.ut.splitGenreColumn(df)
+            df = self.ut.upperString(df,genres_columns[:4])
             df_fat = pd.merge(df ,df_torrent ,how='inner' , on=torrent_columns[:7]).drop(torrent_columns ,axis=1)
             df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:4]).drop(genres_columns ,axis=1)
             df_fat = pd.merge(df_fat ,df_movie ,how='inner' ,on=movie_columns[1:10]).drop(movie_columns ,axis=1)
@@ -213,9 +214,13 @@ class starSchemaModel(BaseOperator):
 
         logging.info('Starting process load star schema')
 
-        self.createDimTorrent()
-        self.createDimGenres()
-        self.createDimMovie()
-        self.createFatFilms()
+        if self.tableId == 'DimTorrent':
+            self.createDimTorrent()
+        if self.tableId == 'DimGenres':
+            self.createDimGenres()
+        if self.tableId == 'DimMovie':
+            self.createDimMovie()
+        else:
+            self.createFatFilms()
 
         logging.info('Completed process load start schema')
