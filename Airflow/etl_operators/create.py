@@ -1,7 +1,7 @@
 from airflow.hooks.base import BaseHook
 from airflow.models import BaseOperator
-from dbConnection import stringConnections
-from etlMonitor import control
+from .connections.dbConnection import stringConnections
+from .utils.etlMonitor import control
 import os
 import logging
 
@@ -17,7 +17,7 @@ class runSql(BaseOperator):
         self.host=conn.host
         self.user=conn.login
         self.password=conn.password
-        self.port=3306
+        self.port=conn.port
         self.etlMonitor = control()
         self.db_connections = stringConnections()
 
@@ -29,11 +29,11 @@ class runSql(BaseOperator):
             dbconn = self.db_connections.mysqlconnection(self.host,self.user,self.password,self.port)
             cursor = dbconn.cursor()
 
-            for file in os.listdir(os.path.join('plugins','etl_operators','SQL')):
+            for file in os.listdir(os.path.join('etl_operators','SQL')):
                 
                 logging.info(f'Reading file {file}')
 
-                with open(os.path.join('plugins','etl_operators','SQL',file),'r') as script:
+                with open(os.path.join('etl_operators','SQL',file),'r') as script:
                     
                     for command in script.read().split(';'):
                         if len(command) > 0:

@@ -3,8 +3,10 @@ import logging
 import pymysql
 
 class stringConnections: 
+    def __init__(self) -> None:
+        pass
     
-    def mysqlconnection(host,user,password,port,db=''):
+    def mysqlconnection(self,host,user,password,port,db=''):
         db_conn = pymysql.connect(
             host=host,
             user=user,
@@ -14,7 +16,7 @@ class stringConnections:
         )
         return db_conn
 
-    def engineSqlAlchemy(host,user,password,port,db=''):
+    def engineSqlAlchemy(self,host,user,password,port,db=''):
         try:
             urlDb = f'mysql+pymysql://{user}:{password}@{host}:{port}/{db}'
             engine = sqlalchemy.create_engine(urlDb)

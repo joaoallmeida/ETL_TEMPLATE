@@ -1,15 +1,16 @@
 # from functions.utilsFunctions import utils
 import requests
 import pandas as pd
-from utilsFunctions import utils
-
+from ..utils.utilsFunctions import utils
 
 class sourceApi:
 
-    def getResponseData():
+    def __init__(self) -> None:
+        self.ut = utils()
+
+    def getResponseData(self):
         
         movies_list = list()
-        ut = utils()
         
         try:
             for page in range(0,10):
@@ -22,7 +23,7 @@ class sourceApi:
             
             data = [d for m in movies_list for d in m]
             df = pd.DataFrame(data)
-            df = ut.convertToJson(df,['genres','torrents'])
+            df = self.ut.convertToJson(df,['genres','torrents'])
             
             return df
 

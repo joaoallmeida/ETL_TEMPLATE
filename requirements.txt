@@ -3,3 +3,4 @@ PyMySQL==1.0.2
 requests==2.27.1
 mysql-connector-python==8.0.28
 apache-airflow==2.2.4
+psycopg2-binary==2.9.3

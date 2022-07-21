@@ -1,8 +1,8 @@
 from airflow.hooks.base import BaseHook
 from airflow.models import BaseOperator
-from dbConnection import stringConnections
-from etlMonitor import control
-from utilsFunctions import utils
+from .connections.dbConnection import stringConnections
+from .utils.etlMonitor import control
+from .utils.utilsFunctions import utils
 import pandas as pd
 import datetime
 import pytz
@@ -22,7 +22,7 @@ class starSchemaModel(BaseOperator):
         self.host = conn.host
         self.user = conn.login
         self.password = conn.password
-        self.port = 3306
+        self.port = conn.port
         self.dbRead ='silver'
         self.dbWrite ='gold'
         self.tableId = tableId
@@ -216,11 +216,17 @@ class starSchemaModel(BaseOperator):
 
         if self.tableId == 'DimTorrent':
             self.createDimTorrent()
-        if self.tableId == 'DimGenres':
+
+        elif self.tableId == 'DimGenres':
             self.createDimGenres()
-        if self.tableId == 'DimMovie':
+
+        elif self.tableId == 'DimMovie':
             self.createDimMovie()
-        else:
+
+        elif self.tableId == 'FatFilms':
             self.createFatFilms()
+        
+        else:
+            logging.warning(f'Table Id {self.tableId} not found !')
 
         logging.info('Completed process load start schema')

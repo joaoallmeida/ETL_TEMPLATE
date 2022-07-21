@@ -6,8 +6,11 @@ import json
 # log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
 
 class utils:
+
+    def __init__(self) -> None:
+        pass
         
-    def truncateTable(table,dbconn):
+    def truncateTable(self,table,dbconn):
 
         logging.info(f'Truncate table {table}')
         
@@ -27,7 +30,7 @@ class utils:
         finally:
             logging.info('Complete Truncate table')
 
-    def getTorrentValue(df):
+    def getTorrentValue(self,df):
         torrent_list = list()
 
         try:
@@ -49,7 +52,7 @@ class utils:
         
         return df_merge
 
-    def convertToJson(df,cols):
+    def convertToJson(self,df,cols):
 
         try:
             for col in cols:
@@ -61,7 +64,7 @@ class utils:
 
         return df
 
-    def InsertToMySQL(df,dbconn,table):
+    def InsertToMySQL(self,df,dbconn,table):
         
         try:
             
@@ -86,7 +89,7 @@ class utils:
         
         return lines_number
         
-    def getChanges(df,table,dbconn):
+    def getChanges(self,df,table,dbconn):
 
         try:
             
@@ -101,7 +104,7 @@ class utils:
         
         return insert
 
-    def splitGenreColumn(df):
+    def splitGenreColumn(self,df):
         
         df['genres'] = df['genres'].apply(lambda x: json.loads(x))
         data = df[df['genres'].notna()][['id','genres']].to_dict()
@@ -112,7 +115,7 @@ class utils:
 
         return df
 
-    def upperString(df,columns):
+    def upperString(self,df,columns):
 
         for col in columns:
             df[col] = df[col].str.upper()

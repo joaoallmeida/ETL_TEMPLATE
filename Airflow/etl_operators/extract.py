@@ -1,7 +1,7 @@
-from connectionApi import sourceApi
-from dbConnection import stringConnections
-from etlMonitor import control
-from utilsFunctions import utils
+from .connections.connectionApi import sourceApi
+from .connections.dbConnection import stringConnections
+from .utils.etlMonitor import control
+from .utils.utilsFunctions import utils
 from airflow.hooks.base import BaseHook
 from airflow.models import BaseOperator
 
@@ -21,12 +21,14 @@ class extractRawData(BaseOperator) :
     def __init__(self, tableName,**kwargs):
         
         super().__init__(**kwargs)
+        
         conn = BaseHook.get_connection('MySql Localhost')
         self.host = conn.host
         self.user = conn.login
         self.password = conn.password
-        self.port = 3306
+        self.port = conn.port
         self.db ='bronze'
+
         self.tableName = tableName
         self.etlMonitor = control()
         self.ut = utils()

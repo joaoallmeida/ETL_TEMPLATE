@@ -1,6 +1,6 @@
 import datetime
 from airflow import DAG
-from airflow.operators.etl_plugin import runSql,extractRawData,refinedData,starSchemaModel
+from etl_operators.etl_plugin import runSql,extractRawData,refinedData,starSchemaModel
 
 default_args={
         'start_date': datetime.datetime(2022,1,1),
@@ -15,7 +15,7 @@ with DAG(
     dag_id="Orchestrator",
     description='A sample orchestrator for ETL process.',
     default_args= default_args,
-    schedule_interval="@daily"
+    schedule_interval=None
 ) as dag:
 
 
@@ -26,7 +26,6 @@ with DAG(
     extract = extractRawData(
         task_id = 'extract_data',
         tableName="yts_movies"
-        # dag=dag
     )
 
     refined = refinedData(
@@ -52,4 +51,4 @@ with DAG(
     )
 
 
-    create >> extract >> refined >> [loadDimTorrent >> loadDimGenres >> loadDimMovie] >> loadFatFilms
+    create >> extract >> refined >> [loadDimTorrent , loadDimGenres , loadDimMovie] >> loadFatFilms

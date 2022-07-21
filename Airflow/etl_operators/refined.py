@@ -1,6 +1,6 @@
-from dbConnection import stringConnections
-from utilsFunctions import utils
-from etlMonitor import control
+from .connections.dbConnection import stringConnections
+from .utils.utilsFunctions import utils
+from .utils.etlMonitor import control
 from airflow.hooks.base import BaseHook
 from airflow.models import BaseOperator
 
@@ -23,7 +23,7 @@ class refinedData(BaseOperator):
         self.host = conn.host
         self.user = conn.login
         self.password = conn.password
-        self.port = 3306
+        self.port = conn.port
         self.dbRead ='bronze'
         self.dbWrite ='silver'
         self.tableName = tableName
