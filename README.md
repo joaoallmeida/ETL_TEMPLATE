@@ -22,11 +22,10 @@ For more information about this API [click here](https://yts.torrentbay.to/api).
 - Incremental data load
 - ETL logs
 - Star Schema Model
-- Python (*Pandas*)
+- Python ( *Pandas* , *POO* )
 - SQL
 - Apache Airflow
 - Apache Superset
-- POO
   
 # Database Desgins ✏️
 
