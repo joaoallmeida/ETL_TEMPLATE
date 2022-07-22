@@ -13,7 +13,9 @@ import socket
 import getpass
 
 
-class Extract(BaseOperator) :
+class Extract(BaseOperator):
+
+    ui_color = "#66B2FF"
 
     def __init__(self, tableName,**kwargs):
         

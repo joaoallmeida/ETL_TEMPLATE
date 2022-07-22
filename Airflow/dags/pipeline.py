@@ -37,6 +37,10 @@ with DAG(
         task_id = 'load_dim_torrent',
         tableId = 'DimTorrent'
     )
+    loadDimCalendar = Load(
+        task_id = 'load_dim_calendar',
+        tableId = 'DimCalendar'
+    )
     loadDimGenres = Load(
         task_id = 'load_dim_genres',
         tableId = 'DimGenres'
@@ -51,4 +55,4 @@ with DAG(
     )
 
 
-    create >> extract >> refined >> [loadDimTorrent , loadDimGenres , loadDimMovie] >> loadFatFilms
+    create >> extract >> refined >> [ loadDimCalendar, loadDimTorrent, loadDimGenres, loadDimMovie ] >> loadFatFilms

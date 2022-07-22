@@ -7,6 +7,9 @@ import logging
 
 
 class Create(BaseOperator):
+
+    ui_color = "#C0C0C0"
+
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 

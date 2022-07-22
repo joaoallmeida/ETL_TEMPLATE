@@ -2,9 +2,9 @@ from ETL.connections.dbConnection import stringConnections
 from ETL.utils.etlMonitor import control
 from ETL.utils.utilsFunctions import utils
 from configparser import ConfigParser
+from datetime import datetime
 
 import pandas as pd
-import datetime
 import pytz
 import getpass
 import socket
@@ -31,12 +31,77 @@ class Load:
         self.connRead = self.connString.engineSqlAlchemy(self.host,self.user,self.password,self.port,self.dbRead)
         self.connWrite = self.connString.engineSqlAlchemy(self.host,self.user,self.password,self.port,self.dbWrite)
 
+    def createDimCalendar(self):
+
+        logging.info('Creating Dim Calendar')
+        self.control.InsertLog(4,'DimCalendar','InProgress')
+
+        def is_weekend(x):
+            if x == 5 or x == 6:
+                return 1
+            else:
+                return 0
+
+        lastYear = (datetime.today().year - 1)
+        currentYear = datetime.today().year
+
+        days_names = {
+                i: name
+                for i, name
+                in enumerate(['Monday', 'Tuesday', 'Wednesday',
+                            'Thursday', 'Friday', 'Saturday', 
+                            'Sunday'])
+            }
+
+        month_names = {
+                i: name
+                for i, name
+                in enumerate(["None", "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"])
+            }
+
+        try:
+            dfCalendar = pd.DataFrame({"db_date": pd.date_range(datetime(lastYear,1,1).strftime('%Y-%m-%d'), datetime(currentYear,12,31).strftime('%Y-%m-%d'))})
+            dfCalendar["time_id"] = dfCalendar.db_date.dt.strftime('%Y%m%d').astype(int)
+            dfCalendar["db_year"] = dfCalendar.db_date.dt.year
+            dfCalendar["db_month"] = dfCalendar.db_date.dt.month
+            dfCalendar["db_day"] = dfCalendar.db_date.dt.day
+            dfCalendar["db_quarter"] = dfCalendar.db_date.dt.quarter
+            dfCalendar["db_semester"] = (dfCalendar.db_quarter + 1) // 2
+            dfCalendar["db_week"] = dfCalendar.db_date.dt.strftime('%U').astype(int)
+            dfCalendar["db_day_of_weak"] = dfCalendar.db_date.dt.dayofyear
+            dfCalendar["nome_of_day"] = dfCalendar.db_date.dt.dayofweek.map(days_names.get)
+            dfCalendar["day_of_weak"] = dfCalendar.db_date.dt.dayofweek
+            dfCalendar["month_name"] = dfCalendar.db_date.dt.month.map(month_names.get)
+            dfCalendar["is_weeked"] = dfCalendar.day_of_weak.apply(is_weekend).astype(bool)
+            dfCalendar["is_leap_year"] = dfCalendar.db_date.dt.is_leap_year
+            dfCalendar["create_by"] = self.user
+            dfCalendar["updated_by"] = self.user
+            dfCalendar["created_at"] = datetime.now()
+            dfCalendar["updated_at"] = datetime.now()
+            dfCalendar = dfCalendar.drop(["day_of_weak"], axis=1)
+
+            lines = len(dfCalendar.index)
+
+            dfCalendar.to_sql('DimCalendar',self.connWrite,if_exists='replace',index=False)
+
+            logging.info(f'Insert lines in Dim Calendar { lines }')
+            logging.info('Completed creation Dim Calendar')
+
+            self.control.InsertLog(4,'DimCalendar','Complete',lines)
+
+        except Exception as e:
+            logging.error(f'Error to load start schema: {e}')
+            self.control.InsertLog(4,'DimCalendar','Error',0,e)
+            raise TypeError(e)
+
+
     def createDimTorrent(self):
 
         logging.info('Creating Dim Torrent')
         self.control.InsertLog(4,'DimTorrent','InProgress')
 
-        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+        dt_now = datetime.now(pytz.timezone('UTC'))
         user = f'{getpass.getuser()}@{socket.gethostname()}'
 
         try:
@@ -70,7 +135,7 @@ class Load:
 
     def createDimGenres(self):
 
-        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+        dt_now = datetime.now(pytz.timezone('UTC'))
         user = f'{getpass.getuser()}@{socket.gethostname()}'
 
         try:
@@ -112,7 +177,7 @@ class Load:
         logging.info('Creating Dim Movie')
         self.control.InsertLog(4,'DimMovie','InProgress')
 
-        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+        dt_now = datetime.now(pytz.timezone('UTC'))
         user = f'{getpass.getuser()}@{socket.gethostname()}'
 
         try:
@@ -153,7 +218,7 @@ class Load:
         logging.info('Creating Fat Film')
         self.control.InsertLog(4,'FatFilm','InProgress')
 
-        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+        dt_now = datetime.now(pytz.timezone('UTC'))
         user = f'{getpass.getuser()}@{socket.gethostname()}'
 
 
@@ -179,11 +244,14 @@ class Load:
             df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:4]).drop(genres_columns ,axis=1)
             df_fat = pd.merge(df_fat ,df_movie ,how='inner' ,on=movie_columns[1:10]).drop(movie_columns ,axis=1)
             df_fat = df_fat.drop_duplicates()
+
+            df_fat['time_id'] =  int(dt_now.strftime('%Y%m%d'))
             df_fat['created_at'] = pd.to_datetime(dt_now)
             df_fat['updated_at'] = pd.to_datetime(dt_now)
             df_fat['loaded_at'] = pd.to_datetime(dt_now)
             df_fat['loaded_by'] = user
-            df_fat = df_fat[['movie_id', 'torrent_id', 'genre_id', 'created_at', 'updated_at', 'extraction_at', 'extraction_by', 'loaded_at','loaded_by']]
+
+            df_fat = df_fat[['movie_id', 'torrent_id', 'genre_id','time_id', 'created_at', 'updated_at', 'extraction_at', 'extraction_by', 'loaded_at','loaded_by']]
 
             df_fat.to_sql('FatFilm',self.connWrite,if_exists='replace',index=False)
 
@@ -212,6 +280,9 @@ class Load:
 
         elif tableId == 'DimMovie':    
             self.createDimMovie()
+
+        elif tableId == 'DimCalendar':    
+            self.createDimCalendar()
 
         elif tableId == 'FatFilms':
             self.createFatFilms()

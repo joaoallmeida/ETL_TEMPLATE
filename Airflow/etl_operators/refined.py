@@ -13,6 +13,8 @@ import logging
 
 class Refined(BaseOperator):
 
+    ui_color="#FFB266"
+
     def __init__(self,tableName,**kwargs):
    
         super().__init__(**kwargs)
