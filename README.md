@@ -36,7 +36,7 @@ For more information about this API [click here](https://yts.torrentbay.to/api).
 
 ---
 
-* For process control, two tables were created, etl Process to save the process execution steps and etl process to define the type of process
+* For process control two tables were created, **etl_logging** to save the process execution steps and **etl_process** to define the type of process
 
 ![](Docs/Screenshot/digram_etl_control.png)
 
