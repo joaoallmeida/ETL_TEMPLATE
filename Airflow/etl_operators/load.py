@@ -11,7 +11,7 @@ import socket
 import logging
 
 
-class starSchemaModel(BaseOperator):
+class Load(BaseOperator):
     
     def __init__(self,tableId,**kwargs):
 

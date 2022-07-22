@@ -1,6 +1,6 @@
 import datetime
 from airflow import DAG
-from etl_operators.etl_plugin import runSql,extractRawData,refinedData,starSchemaModel
+from etl_operators.etlPlugin import Create,Extract,Refined,Load
 
 default_args={
         'start_date': datetime.datetime(2022,1,1),
@@ -19,33 +19,33 @@ with DAG(
 ) as dag:
 
 
-    create = runSql(
+    create = Create(
         task_id = 'create_database_and_tables'
     )
 
-    extract = extractRawData(
+    extract = Extract(
         task_id = 'extract_data',
         tableName="yts_movies"
     )
 
-    refined = refinedData(
+    refined = Refined(
         task_id = 'refined_data',
         tableName="yts_movies"
     )
 
-    loadDimTorrent = starSchemaModel(
+    loadDimTorrent = Load(
         task_id = 'load_dim_torrent',
         tableId = 'DimTorrent'
     )
-    loadDimGenres = starSchemaModel(
+    loadDimGenres = Load(
         task_id = 'load_dim_genres',
         tableId = 'DimGenres'
     )
-    loadDimMovie = starSchemaModel(
+    loadDimMovie = Load(
         task_id = 'load_dim_movie',
         tableId = 'DimMovie'
     )
-    loadFatFilms= starSchemaModel(
+    loadFatFilms= Load(
         task_id = 'load_fat_films',
         tableId = 'FatFilms'
     )

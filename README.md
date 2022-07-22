@@ -29,7 +29,8 @@ For more information about this API [click here](https://yts.torrentbay.to/api).
 - SQL
 - Apache Airflow
 - Apache Superset
-
+- POO
+  
 ---
 ## Sample Data Visualization
 ![](Docs/Screenshot/superset-dashboard.jpg)

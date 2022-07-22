@@ -1,12 +1,12 @@
-# from functions.utilsFunctions import utils
 import requests
 import pandas as pd
 from ..utils.utilsFunctions import utils
 
 class apiRequest:
-
     def __init__(self) -> None:
-        self.ut = utils()
+        
+        self.utils = utils()
+        
 
     def getResponseData(self):
         
@@ -23,7 +23,7 @@ class apiRequest:
             
             data = [d for m in movies_list for d in m]
             df = pd.DataFrame(data)
-            df = self.ut.convertToJson(df,['genres','torrents'])
+            df = self.utils.convertToJson(df,['genres','torrents'])
             
             return df
 

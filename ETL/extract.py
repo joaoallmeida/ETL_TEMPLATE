@@ -1,7 +1,7 @@
-from ETL.Connections.connection_api import getResponseData
-from ETL.Connections.db_connection import engineSqlAlchemy, mysqlconnection
-from ETL.Functions.etl_monitor import InsertLog
-from ETL.Functions.utils_functions import *
+from ETL.connections.apiRequest import apiRequest
+from ETL.connections.dbConnection import stringConnections
+from ETL.utils.etlMonitor import control
+from ETL.utils.utilsFunctions import utils
 from configparser import ConfigParser
 
 import logging
@@ -11,52 +11,60 @@ import pytz
 import socket
 import getpass
 
-# ## Inicial Config
-log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
+class Extract:
 
-# * Function responsible for extacting data from the api
-def ExtractData(TableName):
+    def __init__(self):
 
-    logging.info('Extracting data from API')
-    InsertLog(2,'yts_movies','InProgress')
+        config = ConfigParser()
+        config.read('./credencials.ini')
 
-    config = ConfigParser()
-    config.read('ETL/Connections/credencials.ini')
+        self.host=config['MySQL']['host']
+        self.user=config['MySQL']['user']
+        self.password=config['MySQL']['password']
+        self.port=int(config['MySQL']['port'])
+        self.database = 'bronze'
 
-    HOST=config['MySql']['host']
-    USER=config['MySql']['user']
-    PASSWORD=config['MySql']['pass']
-    DB='bronze'
-    PORT=3306
+        self.utils= utils()
+        self.control = control()
+        self.apiRequest = apiRequest()
+        self.connString = stringConnections()
     
-    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
-    user = f'{getpass.getuser()}@{socket.gethostname()}'
-    
-    try:
-    
-        mysqlconn = mysqlconnection(HOST,USER,PASSWORD,PORT,DB)
-        dbconn = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB)
+        self.mysqlConn = self.connString.mysqlConnection(self.host,self.user,self.password,self.port,self.database)
+        self.dbConn = self.connString.engineSqlAlchemy(self.host,self.user,self.password,self.port,self.database)
+
+    # * Function responsible for extacting data from the api
+    def execute(self,tableName):
+
+        logging.info('Extracting data from API')
+
+        self.control.InsertLog(2,'yts_movies','InProgress')
         
-        df = getResponseData()
-        df['extraction_at'] = dt_now
-        df['extraction_by'] = user
+        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+        user = f'{getpass.getuser()}@{socket.gethostname()}'
         
-        logging.info('Get load data')
-        df = getChanges(df,TableName,dbconn)
+        try:
+            
+            df = self.apiRequest.getResponseData()
+            df['extraction_at'] = dt_now
+            df['extraction_by'] = user
+            
+            logging.info('Get load data')
+            df = self.utils.getChanges(df,tableName,self.dbConn)
+            
+            logging.info('Start Incremental Load')
+            self.utils.InsertToMySQL(df,self.mysqlConn,tableName)
+            logging.info('Complete Incremental Load')
+
+            lines = len(df.index)
+            self.control.InsertLog(2,tableName,'Complete',lines)
+
+            logging.info(f'Insert lines: {lines}')
+
+        except Exception as e:
+            logging.error(f'Error in extract process: {e}',exc_info=False)
+            self.control.InsertLog(2,tableName,'Error',0,e)
+
+            raise TypeError(e)
         
-        logging.info('Start Incremental Load')
-        InsertToMySQL(df,mysqlconn,TableName)
-        logging.info('Complete Incremental Load')
-
-        lines = len(df.index)
-        InsertLog(2,TableName,'Complete',lines)
-
-        logging.info(f'Insert lines: {lines}')
-
-    except Exception as e:
-        logging.error(f'Error in extract process: {e}',exc_info=False)
-        InsertLog(2,TableName,'Error',0,e)
-        raise TypeError(e)
-    
-    finally:
-        logging.info('Completing extract from api')
+        finally:
+            logging.info('Completing extract from api')

@@ -1,6 +1,6 @@
-from ETL.Connections.db_connection import engineSqlAlchemy, mysqlconnection
-from ETL.Functions.utils_functions import *
-from ETL.Functions.etl_monitor import InsertLog
+from ETL.connections.dbConnection import stringConnections
+from ETL.utils.utilsFunctions import utils
+from ETL.utils.etlMonitor import control
 from configparser import ConfigParser
 
 import pandas as pd
@@ -10,79 +10,87 @@ import getpass
 import socket
 import logging
 
-# ## Inicial Config
-log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
+class Refined:
 
-# Function responsible for refined the raw data.
-def DataRefinement(TableName):
+    def __init__(self) -> None:
+        
+        config = ConfigParser()
+        config.read('./credencials.ini')
 
-    logging.info(f'Starting the data refinement process')
-    InsertLog(3,TableName,'InProgress')
+        self.host=config['MySQL']['host']
+        self.user=config['MySQL']['user']
+        self.password=config['MySQL']['password']
+        self.port=int(config['MySQL']['port'])
+        self.dbRead='bronze'
+        self.dbWrite='silver'
 
-    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
-    user = f'{getpass.getuser()}@{socket.gethostname()}'
+        self.utils= utils()
+        self.control = control()
+        self.connString = stringConnections()
 
-    config = ConfigParser()
-    config.read('ETL/Connections/credencials.ini')
+        self.connRead = self.connString.engineSqlAlchemy(self.host,self.user,self.password,self.port,self.dbRead)
+        self.connWrite = self.connString.engineSqlAlchemy(self.host,self.user,self.password,self.port,self.dbWrite)
+        self.dbconn = self.connString.mysqlConnection(self.host,self.user,self.password,self.port,self.dbWrite)
 
-    HOST=config['MySql']['host']
-    USER=config['MySql']['user']
-    PASSWORD=config['MySql']['pass']
-    PORT = 3306
-    DB_READ='bronze'
-    DB_WRITE='silver'
 
-    drop_columns = ['title_english','title_long','slug','description_full','peers',
-                    'synopsis','mpa_rating','background_image','seeds','url_tt',
-                    'background_image_original','small_cover_image','date_uploaded_unix_tt',
-                    'state','date_uploaded_unix','medium_cover_image','hash']
+    # Function responsible for refined the raw data.
+    def execute(self,tableName):
 
-    rename_columns = {
-        "url":"url_yts",
-        "date_uploaded_tt":"uploaded_torrent_at",
-        "date_uploaded":"uploaded_content_at",
-        "large_cover_image":"banner_image"
-        }
-    
-    try:
+        logging.info(f'Starting the data refinement process')
+        self.control.InsertLog(3,tableName,'InProgress')
 
-        conn_read = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
-        conn_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
-        dbconn = mysqlconnection(HOST,USER,PASSWORD,PORT,DB_WRITE)
+        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+        user = f'{getpass.getuser()}@{socket.gethostname()}'
 
-        df = pd.read_sql_table(TableName,conn_read)
-        df = getChanges(df, TableName, conn_write)
+        drop_columns = ['title_english','title_long','slug','description_full','peers',
+                        'synopsis','mpa_rating','background_image','seeds','url_tt',
+                        'background_image_original','small_cover_image','date_uploaded_unix_tt',
+                        'state','date_uploaded_unix','medium_cover_image','hash']
 
-        if len(df.index) > 0:
-            df = getTorrentValue(df)
-            df = df.drop(drop_columns,axis=1)
-            df = df.drop_duplicates().reset_index(drop=True)
-            df = df.rename(rename_columns,axis=1)
+        rename_columns = {
+            "url":"url_yts",
+            "date_uploaded_tt":"uploaded_torrent_at",
+            "date_uploaded":"uploaded_content_at",
+            "large_cover_image":"banner_image"
+            }
+        
+        try:
 
-            df['uploaded_torrent_at'] = pd.to_datetime(df['uploaded_torrent_at'],errors='coerce')
-            df['uploaded_content_at'] = pd.to_datetime(df['uploaded_content_at'],errors='coerce')
-            df['loaded_at'] = pd.to_datetime(dt_now)
-            df['loaded_by'] = user
+            df = pd.read_sql_table(tableName,self.connRead)
+            df = self.utils.getChanges(df, tableName, self.connWrite)
 
-            logging.info('Loading refined table in MySQL')
+            if len(df.index) > 0:
 
-            InsertToMySQL(df,dbconn,TableName)
+                df = self.utils.getTorrentValue(df)
+                df = df.drop(drop_columns,axis=1)
+                df = df.drop_duplicates().reset_index(drop=True)
+                df = df.rename(rename_columns,axis=1)
 
-            logging.info('Completed load refined table in MySQL.')
+                df['uploaded_torrent_at'] = pd.to_datetime(df['uploaded_torrent_at'],errors='coerce')
+                df['uploaded_content_at'] = pd.to_datetime(df['uploaded_content_at'],errors='coerce')
+                df['loaded_at'] = pd.to_datetime(dt_now)
+                df['loaded_by'] = user
 
-            lines_number = len(df.index)
-            
-            logging.info(f'Refined lines {lines_number}')
-        else:
-            lines_number = 0
-            logging.warning('Not found changes')
+                logging.info('Loading refined table in MySQL')
 
-        InsertLog(3,TableName,'Complete',lines_number)
+                self.utils.InsertToMySQL(df,self.dbConn,tableName)
 
-    except Exception as e:
-        logging.error(f'Error to refinement data: {e}')
-        InsertLog(3,TableName,'Error',0,e)
-        raise TypeError(e)
-    
-    finally:
-        logging.info('Ending the data refinement process')
+                logging.info('Completed load refined table in MySQL.')
+
+                lines_number = len(df.index)
+                
+                logging.info(f'Refined lines {lines_number}')
+                
+            else:
+                lines_number = 0
+                logging.warning('Not found changes')
+
+            self.control.InsertLog(3,tableName,'Complete',lines_number)
+
+        except Exception as e:
+            logging.error(f'Error to refinement data: {e}')
+            self.control.InsertLog(3,tableName,'Error',0,e)
+            raise TypeError(e)
+        
+        finally:
+            logging.info('Ending the data refinement process')

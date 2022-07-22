@@ -11,7 +11,7 @@ import getpass
 import socket
 import logging
 
-class refinedData(BaseOperator):
+class Refined(BaseOperator):
 
     def __init__(self,tableName,**kwargs):
    

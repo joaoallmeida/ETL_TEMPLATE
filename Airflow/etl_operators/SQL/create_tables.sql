@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS yts_movies (
 
 -- INSERT PROCESS ID
 INSERT IGNORE INTO monitoring.etl_process (process_id, process, created_by, created_at, updated_at)
-VALUES(1,'Database', USER() , NOW(), NULL);
+VALUES(1,'Create', USER() , NOW(), NULL);
 
 INSERT IGNORE INTO monitoring.etl_process (process_id, process, created_by, created_at, updated_at)
 VALUES(2,'Extract', USER(), NOW(), NULL);

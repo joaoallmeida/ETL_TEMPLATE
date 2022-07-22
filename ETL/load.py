@@ -1,6 +1,6 @@
-from ETL.Connections.db_connection import engineSqlAlchemy
-from ETL.Functions.etl_monitor import InsertLog
-from ETL.Functions.utils_functions import *
+from ETL.connections.dbConnection import stringConnections
+from ETL.utils.etlMonitor import control
+from ETL.utils.utilsFunctions import utils
 from configparser import ConfigParser
 
 import pandas as pd
@@ -10,245 +10,214 @@ import getpass
 import socket
 import logging
 
-# ## Inicial Config
-log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
+class Load:
 
+    def __init__(self) -> None:
 
-def createDimTorrent():
+        config = ConfigParser()
+        config.read('./credencials.ini')
 
-    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
-    user = f'{getpass.getuser()}@{socket.gethostname()}'
+        self.host=config['MySQL']['host']
+        self.user=config['MySQL']['user']
+        self.password=config['MySQL']['password']
+        self.port=int(config['MySQL']['port'])
+        self.dbRead='silver'
+        self.dbWrite='gold'
+        
+        self.utils= utils()
+        self.control = control()
+        self.connString = stringConnections()
 
-    config = ConfigParser()
-    config.read('ETL/Connections/credencials.ini')
+        self.connRead = self.connString.engineSqlAlchemy(self.host,self.user,self.password,self.port,self.dbRead)
+        self.connWrite = self.connString.engineSqlAlchemy(self.host,self.user,self.password,self.port,self.dbWrite)
 
-    HOST=config['MySql']['host']
-    USER=config['MySql']['user']
-    PASSWORD=config['MySql']['pass']
-    PORT=3306
-    DB_READ='silver'
-    DB_WRITE='gold'
+    def createDimTorrent(self):
 
-    dbcon_read = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
-    dbcon_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
-
-    try:
-        df = pd.read_sql_table('yts_movies',dbcon_read).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
-
-        ## ----- ## -----## ----- ## -----## ----- ## -----
-        # ## Dim Torrent
         logging.info('Creating Dim Torrent')
+        self.control.InsertLog(4,'DimTorrent','InProgress')
 
-        InsertLog(4,'DimTorrent','InProgress')
+        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+        user = f'{getpass.getuser()}@{socket.gethostname()}'
 
-        torrent_columns = ["url_torrent","size","size_bytes"
-                        ,"type","quality","language"
-                        ,"uploaded_torrent_at"]
+        try:
 
-        df_torrent = df.copy()
-        df_torrent = df_torrent[torrent_columns[:7]]
-        df_torrent['created_at'] = pd.to_datetime(dt_now)
-        df_torrent['updated_at'] = pd.to_datetime(dt_now)
-        df_torrent['loaded_at'] = pd.to_datetime(dt_now)
-        df_torrent['loaded_by'] = user
-        df_torrent.insert(0, 'torrent_id' , (df_torrent.index+1) )
+            df = pd.read_sql_table('yts_movies',self.connRead).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
 
-        df_torrent.to_sql('DimTorrent',dbcon_write,if_exists='replace',index=False)
-        
-        lines = len(df_torrent.index)
-        InsertLog(4,'DimTorrent','Complete',lines)
+            torrent_columns = ["url_torrent","size","size_bytes"
+                            ,"type","quality","language"
+                            ,"uploaded_torrent_at"]
 
-        logging.info(f'Insert lines in Dim Torrent { lines }')
-        logging.info('Completed creation Dim Torrent')
+            df_torrent = df.copy()
+            df_torrent = df_torrent[torrent_columns[:7]]
+            df_torrent['created_at'] = pd.to_datetime(dt_now)
+            df_torrent['updated_at'] = pd.to_datetime(dt_now)
+            df_torrent['loaded_at'] = pd.to_datetime(dt_now)
+            df_torrent['loaded_by'] = user
+            df_torrent.insert(0, 'torrent_id' , (df_torrent.index+1) )
 
-    except Exception as e:
-        logging.error(f'Error to load start schema: {e}')
-        InsertLog(4,'DimTorrent','Error',0,e)
-        raise TypeError(e)
+            df_torrent.to_sql('DimTorrent',self.connWrite,if_exists='replace',index=False)
+            
+            lines = len(df_torrent.index)
+            self.control.InsertLog(4,'DimTorrent','Complete',lines)
 
-def createDimGenres():
+            logging.info(f'Insert lines in Dim Torrent { lines }')
+            logging.info('Completed creation Dim Torrent')
 
-    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
-    user = f'{getpass.getuser()}@{socket.gethostname()}'
+        except Exception as e:
+            logging.error(f'Error to load start schema: {e}')
+            self.control.InsertLog(4,'DimTorrent','Error',0,e)
+            raise TypeError(e)
 
-    config = ConfigParser()
-    config.read('ETL/Connections/credencials.ini')
+    def createDimGenres(self):
 
-    HOST=config['MySql']['host']
-    USER=config['MySql']['user']
-    PASSWORD=config['MySql']['pass']
-    PORT=3306
-    DB_READ='silver'
-    DB_WRITE='gold'
+        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+        user = f'{getpass.getuser()}@{socket.gethostname()}'
 
-    dbcon_read = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
-    dbcon_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
+        try:
+            df = pd.read_sql_table('yts_movies',self.connRead).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
 
-    try:
-        df = pd.read_sql_table('yts_movies',dbcon_read).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
+  
+            logging.info('Creating Dim Genres')
 
-        ## ----- ## -----## ----- ## -----## ----- ## -----
-        # ## Dim Genres
+            self.control.InsertLog(4,'DimGenres','InProgress')
 
-        logging.info('Creating Dim Genres')
+            genres_columns = ["genre_0","genre_1","genre_2","genre_3"]
 
-        InsertLog(4,'DimGenres','InProgress')
+            df_genres = df.copy()
+            df_genres = self.utils.splitGenreColumn(df)
+            df_genres = df_genres[genres_columns]
+            df_genres = df_genres.drop_duplicates().reset_index(drop=True)
+            df_genres = self.utils.upperString(df_genres, genres_columns)
+            df_genres['created_at'] = pd.to_datetime(dt_now)
+            df_genres['updated_at'] = pd.to_datetime(dt_now)
+            df_genres['loaded_at'] = pd.to_datetime(dt_now)
+            df_genres['loaded_by'] = user
+            df_genres.insert(0, 'genre_id' , (df_genres.index+1))
 
-        genres_columns = ["genre_0","genre_1","genre_2","genre_3"]
+            df_genres.to_sql('DimGenres',self.connWrite,if_exists='replace',index=False)
+            
+            lines = len(df_genres.index)
+            self.control.InsertLog(4,'DimGenres','Complete',lines)
 
-        df_genres = df.copy()
-        df_genres = splitGenreColumn(df)
-        df_genres = df_genres[genres_columns]
-        df_genres = df_genres.drop_duplicates().reset_index(drop=True)
-        df_genres = upperString(df_genres, genres_columns)
-        df_genres['created_at'] = pd.to_datetime(dt_now)
-        df_genres['updated_at'] = pd.to_datetime(dt_now)
-        df_genres['loaded_at'] = pd.to_datetime(dt_now)
-        df_genres['loaded_by'] = user
-        df_genres.insert(0, 'genre_id' , (df_genres.index+1))
+            logging.info(f'Insert lines in Dim Genres { lines }')
+            logging.info('Completed creation Dim Genres')
 
-        df_genres.to_sql('DimGenres',dbcon_write,if_exists='replace',index=False)
-        
-        lines = len(df_genres.index)
-        InsertLog(4,'DimGenres','Complete',lines)
+        except Exception as e:
+            logging.error(f'Error to load start schema: {e}')
+            self.control.InsertLog(4,'DimGenres','Error',0,e)
+            raise TypeError(e)
 
-        logging.info(f'Insert lines in Dim Genres { lines }')
-        logging.info('Completed creation Dim Genres')
-
-    except Exception as e:
-        logging.error(f'Error to load start schema: {e}')
-        InsertLog(4,'DimGenres','Error',0,e)
-        raise TypeError(e)
-
-def createDimMovie():
-
-    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
-    user = f'{getpass.getuser()}@{socket.gethostname()}'
-
-    config = ConfigParser()
-    config.read('ETL/Connections/credencials.ini')
-
-    HOST=config['MySql']['host']
-    USER=config['MySql']['user']
-    PASSWORD=config['MySql']['pass']
-    PORT=3306
-    DB_READ='silver'
-    DB_WRITE='gold'
-
-    dbcon_read = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
-    dbcon_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
-
-    try:
-        df = pd.read_sql_table('yts_movies',dbcon_read).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
-        ## ----- ## -----## ----- ## -----## ----- ## -----
-        # ## Dim Movie
+    def createDimMovie(self):
 
         logging.info('Creating Dim Movie')
+        self.control.InsertLog(4,'DimMovie','InProgress')
 
-        InsertLog(4,'DimMovie','InProgress')
+        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+        user = f'{getpass.getuser()}@{socket.gethostname()}'
+
+        try:
+            df = pd.read_sql_table('yts_movies',self.connRead).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
+       
+            movie_columns = ['id','url_yts', 'title', 'summary', 'banner_image',"imdb_code",	"year",	"rating"
+                            ,"runtime" ,"yt_trailer_code",'uploaded_content_at']
+
+            movie_rename = {
+                        'id':'movie_id'
+                        }
+
+            df_movie = df.copy()
+            df_movie = df_movie[movie_columns[:10]]
+            df_movie = df_movie.drop_duplicates().reset_index(drop=True)
+            df_movie = df_movie.rename(movie_rename,axis=1)
+            df_movie['created_at'] = pd.to_datetime(dt_now)
+            df_movie['updated_at'] = pd.to_datetime(dt_now)
+            df_movie['loaded_at'] = pd.to_datetime(dt_now)
+            df_movie['loaded_by'] = user
+
+            df_movie.to_sql('DimMovie',self.connWrite,if_exists='replace',index=False)
+            
+            lines = len(df_movie.index)
+            self.control.InsertLog(4,'DimMovie','Complete',lines)
+
+            logging.info(f'Insert lines in Dim Movie { lines }')
+            logging.info('Completed creation Dim Movie')
+
+        except Exception as e:
+            logging.error(f'Error to load start schema: {e}')
+            self.control.InsertLog(4,'DimMovie','Error',0,e)
+
+            raise TypeError(e)
+
+    def createFatFilms(self):
+
+        logging.info('Creating Fat Film')
+        self.control.InsertLog(4,'FatFilm','InProgress')
+
+        dt_now = datetime.datetime.now(pytz.timezone('UTC'))
+        user = f'{getpass.getuser()}@{socket.gethostname()}'
+
 
         movie_columns = ['id','url_yts', 'title', 'summary', 'banner_image',"imdb_code",	"year",	"rating"
-                        ,"runtime" ,"yt_trailer_code",'uploaded_content_at']
+                            ,"runtime" ,"yt_trailer_code",'uploaded_content_at','updated_at','loaded_at','loaded_by']
 
-        movie_rename = {
-                    'id':'movie_id'
-                    }
+        genres_columns = ["genre_0","genre_1","genre_2","genre_3",'created_at','updated_at','loaded_at','loaded_by']
 
-        df_movie = df.copy()
-        df_movie = df_movie[movie_columns[:10]]
-        df_movie = df_movie.drop_duplicates().reset_index(drop=True)
-        df_movie = df_movie.rename(movie_rename,axis=1)
-        df_movie['created_at'] = pd.to_datetime(dt_now)
-        df_movie['updated_at'] = pd.to_datetime(dt_now)
-        df_movie['loaded_at'] = pd.to_datetime(dt_now)
-        df_movie['loaded_by'] = user
+        torrent_columns = ["url_torrent","size","size_bytes"
+                            ,"type","quality","language"
+                            ,"uploaded_torrent_at",'created_at','updated_at'
+                            ,'loaded_at','loaded_by']
+        try:
 
-        df_movie.to_sql('DimMovie',dbcon_write,if_exists='replace',index=False)
-        
-        lines = len(df_movie.index)
-        InsertLog(4,'DimMovie','Complete',lines)
+            df = pd.read_sql_table('yts_movies',self.connRead).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
+            df_torrent = pd.read_sql_table('DimTorrent',self.connWrite)
+            df_genres = pd.read_sql_table('DimGenres',self.connWrite)
+            df_movie = pd.read_sql_table('DimMovie',self.connWrite)
 
-        logging.info(f'Insert lines in Dim Movie { lines }')
-        logging.info('Completed creation Dim Movie')
+            df = self.utils.splitGenreColumn(df)
+            df = self.utils.upperString(df,genres_columns[:4])
+            df_fat = pd.merge(df ,df_torrent ,how='inner' , on=torrent_columns[:7]).drop(torrent_columns ,axis=1)
+            df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:4]).drop(genres_columns ,axis=1)
+            df_fat = pd.merge(df_fat ,df_movie ,how='inner' ,on=movie_columns[1:10]).drop(movie_columns ,axis=1)
+            df_fat = df_fat.drop_duplicates()
+            df_fat['created_at'] = pd.to_datetime(dt_now)
+            df_fat['updated_at'] = pd.to_datetime(dt_now)
+            df_fat['loaded_at'] = pd.to_datetime(dt_now)
+            df_fat['loaded_by'] = user
+            df_fat = df_fat[['movie_id', 'torrent_id', 'genre_id', 'created_at', 'updated_at', 'extraction_at', 'extraction_by', 'loaded_at','loaded_by']]
 
-    except Exception as e:
-        logging.error(f'Error to load start schema: {e}')
-        InsertLog(4,'DimMovie','Error',0,e)
-        raise TypeError(e)
+            df_fat.to_sql('FatFilm',self.connWrite,if_exists='replace',index=False)
 
-def createFatFilms():
+            lines = len(df_fat.index)
+            self.control.InsertLog(4,'FatFilm','Complete',lines)
 
-    ## ----- ## -----## ----- ## -----## ----- ## -----
-    # ## Fat Movies
+            logging.info(f'Insert lines in Fat Film { lines }')
+            logging.info('Completed creation Fat Film')
+            
+        except Exception as e:
+            logging.error(f'Error to load start schema: {e}')
+            self.control.InsertLog(4,'FatFilm','Error',0,e)
 
-    logging.info('Creating Fat Film')
-    InsertLog(4,'FatFilm','InProgress')
-
-    dt_now = datetime.datetime.now(pytz.timezone('UTC'))
-    user = f'{getpass.getuser()}@{socket.gethostname()}'
-
-    config = ConfigParser()
-    config.read('ETL/Connections/credencials.ini')
-
-    HOST=config['MySql']['host']
-    USER=config['MySql']['user']
-    PASSWORD=config['MySql']['pass']
-    PORT=3306
-    DB_READ='silver'
-    DB_WRITE='gold'
-
-    dbcon_read = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_READ)
-    dbcon_write = engineSqlAlchemy(HOST,USER,PASSWORD,PORT,DB_WRITE)
-
-    movie_columns = ['id','url_yts', 'title', 'summary', 'banner_image',"imdb_code",	"year",	"rating"
-                        ,"runtime" ,"yt_trailer_code",'uploaded_content_at','updated_at','loaded_at','loaded_by']
-
-    genres_columns = ["genre_0","genre_1","genre_2","genre_3",'created_at','updated_at','loaded_at','loaded_by']
-
-    torrent_columns = ["url_torrent","size","size_bytes"
-                        ,"type","quality","language"
-                        ,"uploaded_torrent_at",'created_at','updated_at'
-                        ,'loaded_at','loaded_by']
-    try:
-
-        df = pd.read_sql_table('yts_movies',dbcon_read).drop(['loaded_at','loaded_by','movie_sk'],axis=1)
-        df_torrent = pd.read_sql_table('DimTorrent',dbcon_write)
-        df_genres = pd.read_sql_table('DimGenres',dbcon_write)
-        df_movie = pd.read_sql_table('DimMovie',dbcon_write)
-
-        df = splitGenreColumn(df)
-        df = upperString(df,genres_columns[:4])
-        df_fat = pd.merge(df ,df_torrent ,how='inner' , on=torrent_columns[:7]).drop(torrent_columns ,axis=1)
-        df_fat = pd.merge(df_fat ,df_genres ,how='inner' ,on=genres_columns[:4]).drop(genres_columns ,axis=1)
-        df_fat = pd.merge(df_fat ,df_movie ,how='inner' ,on=movie_columns[1:10]).drop(movie_columns ,axis=1)
-        df_fat = df_fat.drop_duplicates()
-        df_fat['created_at'] = pd.to_datetime(dt_now)
-        df_fat['updated_at'] = pd.to_datetime(dt_now)
-        df_fat['loaded_at'] = pd.to_datetime(dt_now)
-        df_fat['loaded_by'] = user
-        df_fat = df_fat[['movie_id', 'torrent_id', 'genre_id', 'created_at', 'updated_at', 'extraction_at', 'extraction_by', 'loaded_at','loaded_by']]
-
-        df_fat.to_sql('FatFilm',dbcon_write,if_exists='replace',index=False)
-
-        lines = len(df_fat.index)
-        InsertLog(4,'FatFilm','Complete',lines)
-
-        logging.info(f'Insert lines in Fat Film { lines }')
-        logging.info('Completed creation Fat Film')
-        
-    except Exception as e:
-        logging.error(f'Error to load start schema: {e}')
-        InsertLog(4,'FatFilm','Error',0,e)
-        raise TypeError(e)
+            raise TypeError(e)
 
 
-def LoadStartSchema():
+    def execute(self,tableId):
 
-    logging.info('Starting process load star schema')
+        logging.info('Starting process load star schema')
 
-    createDimTorrent()
-    createDimGenres()
-    createDimMovie()
-    createFatFilms()
+        if tableId == 'DimTorrent':
+            self.createDimTorrent()
 
-    logging.info('Completed process load start schema')
+        elif tableId == 'DimGenres':    
+            self.createDimGenres()
+
+        elif tableId == 'DimMovie':    
+            self.createDimMovie()
+
+        elif tableId == 'FatFilms':
+            self.createFatFilms()
+
+        else:
+            logging.error(f'Table Id {tableId} not found!')    
+
+
+        logging.info('Completed process load start schema')

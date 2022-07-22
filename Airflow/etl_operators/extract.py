@@ -13,7 +13,7 @@ import socket
 import getpass
 
 
-class extractRawData(BaseOperator) :
+class Extract(BaseOperator) :
 
     def __init__(self, tableName,**kwargs):
         

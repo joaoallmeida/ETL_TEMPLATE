@@ -1,11 +1,11 @@
-from etl_operators.create import runSql
-from etl_operators.extract import extractRawData
-from etl_operators.refined import refinedData
-from etl_operators.load import starSchemaModel
+from etl_operators.create import Create
+from etl_operators.extract import Extract
+from etl_operators.refined import Refined
+from etl_operators.load import Load
 
 __all__ = [
-    'runSql',
-    'extractRawData',
-    'refinedData',
-    'starSchemaModel'
+    'Create',
+    'Extract',
+    'Refined',
+    'Load'
 ]
