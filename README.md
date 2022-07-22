@@ -39,4 +39,4 @@ For more information about this API [click here](https://yts.torrentbay.to/api).
 ## Apache Airflow
 This is what the airflow dag looks like:
 
-![](Docs/Screenshot/airflow_pipeline.jpeg)
+![](Docs/Screenshot/airflow_pipeline.png)
