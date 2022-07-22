@@ -1,4 +1,4 @@
-from .connections.connectionApi import sourceApi
+from .connections.apiRequest import apiRequest
 from .connections.dbConnection import stringConnections
 from .utils.etlMonitor import control
 from .utils.utilsFunctions import utils
@@ -29,7 +29,7 @@ class Extract(BaseOperator) :
         self.tableName = tableName
         self.etlMonitor = control()
         self.ut = utils()
-        self.source = sourceApi()
+        self.apiRequest = apiRequest()
         db_connections = stringConnections()
 
         # Creating SqlAlchemy engine and MySql Connection for connect to database. 
@@ -48,7 +48,7 @@ class Extract(BaseOperator) :
         
         try:
             
-            df = self.source.getResponseData()
+            df = self.apiRequest.getResponseData()
             df['extraction_at'] = pd.to_datetime(dt_now)
             df['extraction_by'] = user
             
