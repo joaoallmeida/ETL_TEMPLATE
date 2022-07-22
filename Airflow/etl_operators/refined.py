@@ -11,9 +11,6 @@ import getpass
 import socket
 import logging
 
-# ## Inicial Config
-# log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
-
 class refinedData(BaseOperator):
 
     def __init__(self,tableName,**kwargs):

@@ -13,9 +13,6 @@ import socket
 import getpass
 
 
-# ## Inicial Config
-# log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
-
 class extractRawData(BaseOperator) :
 
     def __init__(self, tableName,**kwargs):

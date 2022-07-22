@@ -6,9 +6,6 @@ import os
 import logging
 
 
-# ## Inicial Config
-# log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
-
 class runSql(BaseOperator):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)

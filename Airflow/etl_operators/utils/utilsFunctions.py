@@ -2,9 +2,6 @@ import logging
 import pandas as pd
 import json
 
-# ## Inicial Config
-# log_conf = logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s -> %(message)s')
-
 class utils:
 
     def __init__(self) -> None:
