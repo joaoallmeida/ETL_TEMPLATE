@@ -16,6 +16,7 @@ x-airflow-common:
     - ./yts-movies-etl/Airflow/dags:/opt/airflow/dags
     - ./yts-movies-etl/Airflow/logs:/opt/airflow/logs
     - ./yts-movies-etl/Airflow/plugins:/opt/airflow/plugins
+    - ./yts-movies-etl/Airflow/etl_operators:/opt/airflow/etl_operators
   user: root
   
 services:
