@@ -250,7 +250,8 @@ class Load(BaseOperator):
             df_fat['updated_at'] = pd.to_datetime(dt_now)
             df_fat['loaded_at'] = pd.to_datetime(dt_now)
             df_fat['loaded_by'] = user
-            df_fat = df_fat[['movie_id', 'torrent_id', 'genre_id', 'created_at', 'updated_at', 'extraction_at', 'extraction_by', 'loaded_at','loaded_by']]
+            
+            df_fat = df_fat[['movie_id', 'torrent_id', 'genre_id','time_id', 'created_at', 'updated_at', 'extraction_at', 'extraction_by', 'loaded_at','loaded_by']]
 
             df_fat.to_sql('FatFilm',self.dbConnWrite,if_exists='replace',index=False)
 
