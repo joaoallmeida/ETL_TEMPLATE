@@ -6,7 +6,7 @@ This process uses the **YTS Movies API**, a public API for developers, as data s
 For more information about this API [click here](https://yts.torrentbay.to/api).
 
 
-# Pipeline workflow
+# Pipeline workflow 👷🏽
 ![](Docs/Screenshot/pipeline_diagram.png)
 ## Step-By-Step
 1. The first step in this process is to create the database and tables.
@@ -27,7 +27,7 @@ For more information about this API [click here](https://yts.torrentbay.to/api).
 - Apache Airflow
 - Apache Superset
   
-# Database Desgins ✏️
+# Database Design ✏️
 
 * For this project, the star schema is used to design tables. In this way, it simplifies queries and provides fast data aggregation.
 
@@ -39,14 +39,14 @@ For more information about this API [click here](https://yts.torrentbay.to/api).
 
 ![](Docs/Screenshot/digram_etl_control.png)
 
-# Sample Data Visualization
+# Sample Data Visualization 📊
 
 * This is an example of a dashboard template for data visualization, build in apache superset.
   
 ![](Docs/Screenshot/superset-dashboard.jpg)
 
 
-# Apache Airflow Pipeline
+# Apache Airflow Pipeline 
 
 * This is what the airflow dag looks like:
 
