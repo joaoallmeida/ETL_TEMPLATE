@@ -1,6 +1,6 @@
 import datetime
 from airflow import DAG
-from etl_operators.etlPlugin import Create,Extract,Refined,Load
+from etl_operators.etlPlugin import Create,Extract,Refined,Load, DataQuality
 
 default_args={
         'start_date': datetime.datetime(2022,1,1),
@@ -37,22 +37,36 @@ with DAG(
         task_id = 'load_dim_torrent',
         tableId = 'DimTorrent'
     )
+
     loadDimCalendar = Load(
         task_id = 'load_dim_calendar',
         tableId = 'DimCalendar'
     )
+
     loadDimGenres = Load(
         task_id = 'load_dim_genres',
         tableId = 'DimGenres'
     )
+
     loadDimMovie = Load(
         task_id = 'load_dim_movie',
         tableId = 'DimMovie'
     )
+
     loadFatFilms= Load(
         task_id = 'load_fat_films',
-        tableId = 'FatFilms'
+        tableId = 'FatFilm'
     )
 
+    dataQuality = DataQuality(
+        task_id = 'data_quality',
+        tableName = [
+            'DimCalendar',
+            'DimTorrent',
+            'DimGenres',
+            'DimMovie',
+            'FatFilm'
+        ]
+    )
 
-    create >> extract >> refined >> [ loadDimCalendar, loadDimTorrent, loadDimGenres, loadDimMovie ] >> loadFatFilms
+    create >> extract >> refined >> [ loadDimCalendar, loadDimTorrent, loadDimGenres, loadDimMovie ] >> loadFatFilms >> dataQuality

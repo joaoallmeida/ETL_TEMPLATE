@@ -5,6 +5,7 @@ from etl_operators.create import Create
 from etl_operators.extract import Extract 
 from etl_operators.refined import Refined 
 from etl_operators.load import Load 
+from etl_operators.dataQuality import DataQuality
 
 class EtlPlugin(AirflowPlugin):
 
@@ -14,7 +15,8 @@ class EtlPlugin(AirflowPlugin):
         Create,
         Extract,
         Refined,
-        Load
+        Load,
+        DataQuality
     ]
     
     hooks = []

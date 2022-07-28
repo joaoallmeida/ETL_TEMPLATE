@@ -198,6 +198,7 @@ class Load:
             df_movie['updated_at'] = pd.to_datetime(dt_now)
             df_movie['loaded_at'] = pd.to_datetime(dt_now)
             df_movie['loaded_by'] = user
+            df_movie.insert(0, 'movie_id' , (df_movie.index+1))
 
             df_movie.to_sql('DimMovie',self.connWrite,if_exists='replace',index=False)
             
@@ -250,8 +251,9 @@ class Load:
             df_fat['updated_at'] = pd.to_datetime(dt_now)
             df_fat['loaded_at'] = pd.to_datetime(dt_now)
             df_fat['loaded_by'] = user
+            df_fat.insert(0, 'fat_id' , (df_fat.index+1))
 
-            df_fat = df_fat[['movie_id', 'torrent_id', 'genre_id','time_id', 'created_at', 'updated_at', 'extraction_at', 'extraction_by', 'loaded_at','loaded_by']]
+            df_fat = df_fat[['fat_id','movie_id', 'torrent_id', 'genre_id','time_id', 'created_at', 'updated_at', 'extraction_at', 'extraction_by', 'loaded_at','loaded_by']]
 
             df_fat.to_sql('FatFilm',self.connWrite,if_exists='replace',index=False)
 
