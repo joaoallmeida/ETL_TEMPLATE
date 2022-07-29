@@ -198,7 +198,6 @@ class Load(BaseOperator):
             df_movie['updated_at'] = pd.to_datetime(dt_now)
             df_movie['loaded_at'] = pd.to_datetime(dt_now)
             df_movie['loaded_by'] = user
-            df_movie.insert(0, 'movie_id' , (df_movie.index+1))
 
             df_movie.to_sql('DimMovie',self.dbConnWrite,if_exists='replace',index=False)
             
@@ -214,6 +213,9 @@ class Load(BaseOperator):
             raise TypeError(e)
 
     def createFatFilms(self):
+        
+        logging.info('Creating Fat Film')
+        self.etlMonitor.InsertLog(4,'FatFilm','InProgress')
 
         dt_now = datetime.now(pytz.timezone('UTC'))
         user = f'{getpass.getuser()}@{socket.gethostname()}'
@@ -235,8 +237,6 @@ class Load(BaseOperator):
             df_genres = pd.read_sql_table('DimGenres',self.dbConnWrite)
             df_movie = pd.read_sql_table('DimMovie',self.dbConnWrite)
             
-            logging.info('Creating Fat Film')
-            self.etlMonitor.InsertLog(4,'FatFilm','InProgress')
 
             df = self.ut.splitGenreColumn(df)
             df = self.ut.upperString(df,genres_columns[:4])

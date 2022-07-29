@@ -1,7 +1,7 @@
 from airflow.hooks.base import BaseHook
 from airflow.models import BaseOperator
 from .connections.dbConnection import stringConnections
-# from .utils.etlMonitor import control
+from .utils.etlMonitor import control
 import pandas as pd
 import logging
 
@@ -19,7 +19,7 @@ class DataQuality(BaseOperator):
     self.port=conn.port
     self.db = 'gold'
     self.tableName = tableName
-    # self.etlMonitor = control()
+    self.etlMonitor = control()
     self.db_connections = stringConnections()
 
     self.connString = stringConnections()
@@ -27,7 +27,10 @@ class DataQuality(BaseOperator):
 
   def execute(self,context):
 
+    self.etlMonitor.InsertLog(5,'N/D','InProgress')
+
     try:
+
       for table in self.tableName:
 
         logging.info(f'Checking data quality from table -> {table}')
@@ -45,4 +48,7 @@ class DataQuality(BaseOperator):
               raise ValueError(f'Found duplicate row in table {table}')
 
     except Exception as e:
+      self.etlMonitor.InsertLog(5,'N/D','Error',0,e)
       raise e
+    
+    self.etlMonitor.InsertLog(5,'N/D','Complete')

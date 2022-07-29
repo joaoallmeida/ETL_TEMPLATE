@@ -95,3 +95,6 @@ VALUES(3,'Transform', USER(), NOW(), NULL);
 
 INSERT IGNORE INTO monitoring.etl_process (process_id, process, created_by, created_at, updated_at)
 VALUES(4,'Load', USER(), NOW(), NULL);
+
+INSERT IGNORE INTO monitoring.etl_process (process_id, process, created_by, created_at, updated_at)
+VALUES(5,'Quality', USER(), NOW(), NULL);
